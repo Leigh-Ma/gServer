@@ -1,17 +1,14 @@
-package prototcp
-
-import (
-	"net"
-)
+package gatewayoutter
 
 import (
 	dm "library/core/datamsg"
+	"net"
 	"service"
 )
 
-const ServiceName = "prototcpserver"
+const ServiceName = "gatewayoutter"
 
-type protoTCPServer struct {
+type gatewayOutter struct {
 	*service.Service
 	output *dm.DataMsgPipe
 
@@ -20,8 +17,8 @@ type protoTCPServer struct {
 	port     string
 }
 
-func NewProtoTCPServer(name, ip, port string) *protoTCPServer {
-	t := &protoTCPServer{}
+func NewGatewayOutter(name, ip, port string) *gatewayOutter {
+	t := &gatewayOutter{}
 	t.Service = service.NewService(ServiceName)
 	t.output = nil
 	t.Name = name

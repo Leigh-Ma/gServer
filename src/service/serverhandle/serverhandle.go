@@ -1,19 +1,19 @@
-package protohandle
+package serverhandle
 
 import (
 	dm "library/core/datamsg"
 	"service"
 )
 
-const ServiceName = "protohandle"
+const ServiceName = "serverhandle"
 
-type protoHandle struct {
+type serverHandle struct {
 	*service.Service
 	Output *dm.DataMsgPipe
 }
 
-func NewProtoHandle(name string) *protoHandle {
-	t := &protoHandle{}
+func NewServerHandle(name string) *serverHandle {
+	t := &serverHandle{}
 	t.Service = service.NewService(ServiceName)
 	t.Output = nil
 	t.Name = name

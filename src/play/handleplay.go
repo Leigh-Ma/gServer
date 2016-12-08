@@ -4,11 +4,11 @@ package play
 import . "types"
 
 func Play_InvalidReq(playerId IdString, opCode MsgType, req interface{}) interface{} {
-	return getCommonAck(OK)
+	return getCommonAck(ERR_INVALID_REQ)
 }
 
 func Play_LoginReq(playerId IdString, opCode MsgType, req *LoginReq) interface{} {
-	return &LoginAck{Common: getCommonAck(ERR_INVALID_REQ)}
+	return &LoginAck{Common: getCommonAck(OK)}
 }
 
 func Play_LogoutReq(playerId IdString, opCode MsgType, req *LogoutReq) interface{} {

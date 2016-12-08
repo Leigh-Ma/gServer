@@ -47,6 +47,7 @@ package $PACKAGE
 type MsgType int32
 
 const (
+    MT_HeatBeat          =  MsgType(  123456)
     MT_Blank             =  MsgType(  0)
 
 EOF
@@ -65,5 +66,32 @@ printFunction='function printACode(codeDesc){
 
 doAwkAnalysis | tee -a ${MSG_TYPE}
 echo ")" | tee -a ${MSG_TYPE}
+
+#message type in string form
+cat << EOF | tee -a ${MSG_TYPE}
+
+func (mt MsgType)ToString() string {
+    return netMsgTypeName[mt]
+}
+
+var netMsgTypeName = map[MsgType]string {
+    MT_HeatBeat         :  "MT_HeatBeat",
+    MT_Blank            :  "MT_Blank",
+EOF
+printFunction='function printACode(codeDesc){
+            action = codeDes["action"]
+            code   = codeDesc["code"]
+            if(action != "" && code != "") {
+                type=sprintf("MT_%s", action);
+                printf("    %-20s:  \"%s\",\n", type, type);
+            } else if (action != "") {
+                print("    //WARN: INVALID PROTO MAY EXIST HERE")
+            }
+            delete codeDesc
+        }'
+
+doAwkAnalysis | tee -a ${MSG_TYPE}
+echo "}" | tee -a ${MSG_TYPE}
+
 
 mv ${MSG_TYPE} ../${TARGET_DIR_1_LEVEL_ABOVE}/

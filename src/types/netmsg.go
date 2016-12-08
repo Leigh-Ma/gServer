@@ -8,13 +8,19 @@ import (
 )
 
 const (
-	NetMsgHeadSize  = 8 + 4 + 4
+	NetMsgHeadNoIdSize  = 4 + 4
+	NetMsgHeadSize      = 8 + 4 + 4
 )
+
+type NetMsgHeadNoId struct {
+	OpCode   MsgType
+	Size     int32
+}
+
 
 type NetMsgHead struct{
 	UserId   PlayerId
-	OpCode   MsgType
-	Size     int32
+	NetMsgHeadNoId
 }
 
 func (h *NetMsgHead) DecodeHead(head []byte) error {
@@ -32,13 +38,17 @@ func (h *NetMsgHead) EncodeHead() ([]byte, error) {
 	return w.Bytes(), err
 }
 
+func (h *NetMsgHead) DecodeHeadNoId(head []byte) error {
+	r := bytes.NewReader(head)
+
+	//network flow always use BigEndian
+	return binary.Read(r, binary.BigEndian, &(h.NetMsgHeadNoId))
+}
+
 func (h *NetMsgHead) EncodeHeadNoID() ([]byte, error) {
 	w := new(bytes.Buffer)
 
-	err := binary.Write(w, binary.BigEndian, h.OpCode)
-	if err == nil {
-		err = binary.Write(w, binary.BigEndian, h.Size)
-	}
+	err := binary.Write(w, binary.BigEndian, &(h.NetMsgHeadNoId))
 
 	return w.Bytes(), err
 }
@@ -50,12 +60,25 @@ type NetMsg struct {
 }
 
 func NewNetMsg(userId PlayerId, code MsgType) *NetMsg {
-	return &NetMsg{NetMsgHead:NetMsgHead{UserId: userId, OpCode: code}}
+	msg := &NetMsg{NetMsgHead:NetMsgHead{UserId: userId}}
+	msg.OpCode = code;
+
+	return msg
 }
 
 func NewNetMsgFromHead(head []byte) (*NetMsg, error){
 	msg := &NetMsg{}
 	if err := msg.DecodeHead(head); err != nil {
+		return nil, err
+	}
+
+	msg.Content = make([]byte, msg.Size)
+	return msg, nil
+}
+
+func NewNetMsgFromHeadNoId(head []byte) (*NetMsg, error){
+	msg := &NetMsg{}
+	if err := msg.DecodeHeadNoId(head); err != nil {
 		return nil, err
 	}
 

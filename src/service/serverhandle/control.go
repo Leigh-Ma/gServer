@@ -1,28 +1,28 @@
-package protohandle
+package serverhandle
 
 import (
 	cm "library/core/controlmsg"
 	dm "library/core/datamsg"
 )
 
-func (t *protoHandle) Start(bus *dm.DataMsgPipe) bool {
+func (t *serverHandle) Start(bus *dm.DataMsgPipe) bool {
 	t.Output = bus
 	return true
 }
 
-func (t *protoHandle) Pause() bool {
+func (t *serverHandle) Pause() bool {
 	return true
 }
 
-func (t *protoHandle) Resume() bool {
+func (t *serverHandle) Resume() bool {
 	return true
 }
 
-func (t *protoHandle) Exit() bool {
+func (t *serverHandle) Exit() bool {
 	return true
 }
 
-func (t *protoHandle) ControlHandler(msg *cm.ControlMsg) (int, int) {
+func (t *serverHandle) ControlHandler(msg *cm.ControlMsg) (int, int) {
 	//switch msg.MsgType {
 	//case cm.ControlMsgExit:
 	//	logger.Info("%s:ControlMsgPipe.Cmd Read %d", t.Name, msg.MsgType)
