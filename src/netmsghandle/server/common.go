@@ -1,16 +1,16 @@
-package manage
+package server
 
 import (
 	"library/frame"
 	. "types"
 )
 
-var GateWayFrame = frame.NewFrame()
+var ServerFrame = frame.NewFrame()
 
 func getCommonAck(code int32) *CommonAck {
 	return &CommonAck{
 		Status:    code,
 		Message:   ErrDesc[code],
-		TimeStamp: uint32(GateWayFrame.FrameTime()),
+		TimeStamp: uint32(ServerFrame.FrameTime()),
 	}
 }

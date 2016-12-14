@@ -1,10 +1,10 @@
 package serverhandle
 
 import (
-	gateway "gateway/manage"
 	pb "github.com/golang/protobuf/proto"
 	"library/logger"
-	"server/play"
+	"netmsghandle/gateway"
+	"netmsghandle/server"
 	. "types"
 )
 
@@ -44,9 +44,9 @@ func HandleMessageFromGateway(payload *NetMsg) interface{} {
 
 //Message from client
 func playHandler(payload *NetMsg) (interface{}, MsgType) {
-	play.PlayFrame.SetFrameTime()
+	server.ServerFrame.SetFrameTime()
 
-	handler, ok := play.NetMsgTypeHandler[payload.Code()]
+	handler, ok := server.NetMsgTypeHandler[payload.Code()]
 	if !ok {
 		logger.Info("PlayHandler get invalid payload type %d", payload.TypeString())
 		return nil, MT_Blank

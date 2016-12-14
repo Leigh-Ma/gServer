@@ -1,5 +1,5 @@
 # go=innermsgtypes.go
-# package=gateway/manage
+# package=netmsghandle/gateway
 # the line up is used for script, value after '=' should be set
 # <template> : code:   1, action: LoginReq, payload: LoginReq, reaction: 2,
 #              desc:   "player login request";

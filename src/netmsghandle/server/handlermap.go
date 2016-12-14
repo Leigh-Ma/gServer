@@ -1,8 +1,8 @@
-package sim
+package server
 //Auto generated, do not modify unless you know clearly what you are doing.
 import . "types"
 
-type NetMsgHandler func(playerId IdString, opcode MsgType, content []byte ) interface{};
+type NetMsgHandler func(objectId IdString, opcode MsgType, content []byte ) interface{};
 
 type NetMsgCb struct{
 	OpCode  MsgType
@@ -12,7 +12,6 @@ type NetMsgCb struct{
 }
 
 var NetMsgTypeHandler = map[MsgType]*NetMsgCb {
-    //WARN: INVALID PROTO MAY EXIST HERE
 	MT_LoginReq      :&NetMsgCb{MT_LoginReq     , MT_LoginAck     , On_LoginReq     , "player login request"},
 	MT_LoginAck      :&NetMsgCb{MT_LoginAck     , MT_Blank        , On_LoginAck     , "player login ack from client"},
 	MT_LogoutReq     :&NetMsgCb{MT_LogoutReq    , MT_LogoutAck    , On_LogoutReq    , ""},

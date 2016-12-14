@@ -1,12 +1,16 @@
-package manage
+package gateway
+
 //Auto generated, do not modify unless you know clearly what you are doing.
 
-import . "types"
+import (
+	. "types"
+)
 
 func Handle_InvalidReq(objectId IdString, opCode MsgType, req interface{}) interface{} {
-	return getCommonAck(ERR_INVALID_REQ)
+	return nil
 }
 
 func Handle_ServerLoginReq(objectId IdString, opCode MsgType, req *ServerLoginReq) interface{} {
-	return nil
+	ack := &ServerLoginAck{ServerId: "0x84a5d16000028001"}
+	return ack
 }

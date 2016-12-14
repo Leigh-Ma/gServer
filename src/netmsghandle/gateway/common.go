@@ -1,16 +1,16 @@
-package play
+package gateway
 
 import (
 	"library/frame"
 	. "types"
 )
 
-var PlayFrame = frame.NewFrame()
+var GateWayFrame = frame.NewFrame()
 
 func getCommonAck(code int32) *CommonAck {
 	return &CommonAck{
 		Status:    code,
 		Message:   ErrDesc[code],
-		TimeStamp: uint32(PlayFrame.FrameTime()),
+		TimeStamp: uint32(GateWayFrame.FrameTime()),
 	}
 }

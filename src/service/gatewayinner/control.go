@@ -1,12 +1,12 @@
 package gatewayinner
 
 import (
-	. "gateway/manage"
 	"io"
 	cm "library/core/controlmsg"
 	dm "library/core/datamsg"
 	"library/logger"
 	"net"
+	"netmsghandle/gateway"
 	"time"
 	. "types"
 )
@@ -62,7 +62,7 @@ func (t *gatewayInner) gatewayServer() {
 
 //get one message from server connection
 func (t *gatewayInner) gatewayServerConn(connection *net.TCPConn) {
-	serverMeta := NewServerMeta(connection)
+	serverMeta := gateway.NewServerMeta(connection)
 
 	for serverMeta.Conn != nil {
 		head := make([]byte, NetMsgHeadSize)
@@ -70,7 +70,7 @@ func (t *gatewayInner) gatewayServerConn(connection *net.TCPConn) {
 		if err != nil {
 			logger.Error("%s: read server %s ack head(+ID) error: %s",
 				t.Name, serverMeta.ID, err.Error())
-			Servers.Logout(serverMeta)
+			gateway.Servers.Logout(serverMeta)
 			break
 		}
 
@@ -78,7 +78,7 @@ func (t *gatewayInner) gatewayServerConn(connection *net.TCPConn) {
 		if err != nil {
 			logger.Error("%s: decode server %s ack head(+ID) error: %s",
 				t.Name, serverMeta.ID, err.Error())
-			Servers.Logout(serverMeta)
+			gateway.Servers.Logout(serverMeta)
 			break
 		}
 
@@ -88,7 +88,7 @@ func (t *gatewayInner) gatewayServerConn(connection *net.TCPConn) {
 		if err != nil {
 			logger.Error("%s: read server %s ack payload error: %s",
 				t.Name, serverMeta.ID, err.Error())
-			Servers.Logout(serverMeta)
+			gateway.Servers.Logout(serverMeta)
 			break
 		}
 
@@ -98,5 +98,5 @@ func (t *gatewayInner) gatewayServerConn(connection *net.TCPConn) {
 	}
 
 	logger.Warn("%s: server %s exit", t.Name, serverMeta.ID)
-	Servers.Logout(serverMeta)
+	gateway.Servers.Logout(serverMeta)
 }

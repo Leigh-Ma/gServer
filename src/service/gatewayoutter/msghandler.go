@@ -1,14 +1,14 @@
 package gatewayoutter
 
 import (
-	. "gateway/manage"
 	pb "github.com/golang/protobuf/proto"
 	"library/logger"
+	"netmsghandle/gateway"
 	. "types"
 )
 
-func forwardServerMessageToClient(serverMeta *ConnMeta, msg *NetMsg) bool {
-	clientMeta, ok := Clients.GetMeta(msg.ToIdString())
+func forwardServerMessageToClient(serverMeta *gateway.ConnMeta, msg *NetMsg) bool {
+	clientMeta, ok := gateway.Clients.GetMeta(msg.ToIdString())
 	if !ok || clientMeta.Conn == nil {
 		logger.Error("client connection for player %s is nil or serv", msg.ToIdString())
 		return false
@@ -22,7 +22,7 @@ func forwardServerMessageToClient(serverMeta *ConnMeta, msg *NetMsg) bool {
 
 	n, err := clientMeta.Conn.Write(binary)
 	if err != nil {
-		Clients.Logout(clientMeta)
+		gateway.Clients.Logout(clientMeta)
 		logger.Error("gateway: forward MSG <%16s> to player %s error: %s",
 			msg.TypeString(), clientMeta.ID, err.Error())
 		return false
@@ -35,15 +35,15 @@ func forwardServerMessageToClient(serverMeta *ConnMeta, msg *NetMsg) bool {
 }
 
 //gateway receives message from server (protocol between server & gateway)
-func handleServer2GatewayMessage(serverMeta *ConnMeta, msg *NetMsg) bool {
-	handler, ok := NetMsgTypeHandler[msg.Code()]
+func handleServer2GatewayMessage(serverMeta *gateway.ConnMeta, msg *NetMsg) bool {
+	handler, ok := gateway.NetMsgTypeHandler[msg.Code()]
 	if !ok {
 		logger.Warn("message from server: code %s do not handler", msg.TypeString())
 		return false
 	}
 
 	if msg.Code() == MT_ServerLoginReq {
-		Servers.Login(serverMeta, msg.Content)
+		gateway.Servers.Login(serverMeta, msg.Content)
 	}
 
 	opName := msg.TypeString()
@@ -71,7 +71,7 @@ func handleServer2GatewayMessage(serverMeta *ConnMeta, msg *NetMsg) bool {
 
 	n, err := serverMeta.Send(bin)
 	if err != nil {
-		Servers.Logout(serverMeta)
+		gateway.Servers.Logout(serverMeta)
 		logger.Error("gateway: froward MSG <%16s> to server %s error: %s",
 			msg.TypeString(), serverMeta.ID, err.Error())
 		return false
@@ -83,13 +83,13 @@ func handleServer2GatewayMessage(serverMeta *ConnMeta, msg *NetMsg) bool {
 	return true
 }
 
-func distributeBroadCastMessageToClients(serverMeta *ConnMeta, msg *NetMsg) bool {
+func distributeBroadCastMessageToClients(serverMeta *gateway.ConnMeta, msg *NetMsg) bool {
 
 	return true
 }
 
 //server ack/heartbeat message, forward to client without userId
-func HandleMessageFromServer(serverMeta *ConnMeta, msg *NetMsg) bool {
+func HandleMessageFromServer(serverMeta *gateway.ConnMeta, msg *NetMsg) bool {
 	//server message for
 	switch {
 	case msg.HasFlag(NetMsgIdFlagClient):

@@ -1,16 +1,16 @@
 package gatewayinner
 
 import (
-	. "gateway/manage"
 	"library/logger"
+	"netmsghandle/gateway"
 	. "types"
 )
 
 //client req message, forward to server with userId
-func HandleClientMessage(clientMeta *ConnMeta, msg *NetMsg) bool {
+func HandleClientMessage(clientMeta *gateway.ConnMeta, msg *NetMsg) bool {
 
 	if clientMeta.ForwardMeta == nil {
-		Clients.Login(clientMeta, msg.Content)
+		gateway.Clients.Login(clientMeta, msg.Content)
 	}
 
 	logger.Info("gateway: recv from client ID <%s>, MSG <%s>", clientMeta.ID, msg.TypeString())
@@ -28,7 +28,7 @@ func HandleClientMessage(clientMeta *ConnMeta, msg *NetMsg) bool {
 
 	n, err := serverMeta.Send(binary)
 	if err != nil {
-		Servers.Logout(serverMeta)
+		gateway.Servers.Logout(serverMeta)
 		logger.Error("gateway: froward MSG <%16s> to server %s error: %s",
 			msg.TypeString(), serverMeta.ID, err.Error())
 		return false
