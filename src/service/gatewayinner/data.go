@@ -1,9 +1,9 @@
 package gatewayinner
 
 import (
+	"game/gateway/gm"
 	dm "library/core/datamsg"
 	"library/logger"
-	"netmsghandle/gateway"
 	. "types"
 )
 
@@ -20,7 +20,7 @@ func (t *gatewayInner) DataHandler(msg *dm.DataMsg) bool {
 		return false
 	}
 
-	clientMeta, ok := meta.(*gateway.ConnMeta)
+	clientMeta, ok := meta.(*gm.ConnMeta)
 	if !ok {
 		logger.Error("%s:wrong meta in datamsg(should be *ClientConnectionMeta):%+v", t.Name, meta)
 		return false
@@ -32,5 +32,5 @@ func (t *gatewayInner) DataHandler(msg *dm.DataMsg) bool {
 		return false
 	}
 
-	return HandleClientMessage(clientMeta, netMsg)
+	return GatewayOnClientMessage(clientMeta, netMsg)
 }

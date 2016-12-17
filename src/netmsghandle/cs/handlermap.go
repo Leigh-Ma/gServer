@@ -1,4 +1,4 @@
-package server
+package cs
 //Auto generated, do not modify unless you know clearly what you are doing.
 import . "types"
 

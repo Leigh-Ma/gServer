@@ -12,6 +12,7 @@ import (
 	"library/logger"
 	"service"
 	//"service/mongo"
+	"game/server/play"
 	"service/serverhandle"
 	"service/servertcp"
 	"service/timer"
@@ -55,6 +56,8 @@ func main() {
 
 	protoSvr := servertcp.NewServerTCP(servertcp.ServiceName, "127.0.0.1", "9000")
 	service.StartService(protoSvr, distributor.BUS)
+	play.AsyncSender.SetSyncBuffPool(protoSvr.Buffer)
+	play.AsyncSender.SetGsConnection(protoSvr.Name, protoSvr.GS)
 
 	for {
 		select {

@@ -1,4 +1,4 @@
-package gateway
+package gm
 
 import (
 	"errors"
@@ -135,4 +135,57 @@ func (meta *ConnMeta) Send(b []byte) (int, error) {
 
 	//todo
 	return n, err
+}
+
+func (meta *ConnMeta) BroadCastSendClient(opName string, content []byte) {
+	go func() {
+		n, err := meta.Conn.Write(content)
+		if err != nil {
+			Clients.Logout(meta)
+			logger.Error("brdcast: MSG <%16s> send to player %s error: %s",
+				opName, meta.ID, err.Error())
+			return
+		}
+		logger.Info("brdcast: MSG <%16s> foward to player %s success (%d bytes)",
+			opName, meta.ID, n)
+	}()
+}
+
+func (meta *ConnMeta) CsToClient(opName string, content []byte) bool {
+	_, err := meta.Send(content)
+	if err != nil {
+		Servers.Logout(meta)
+		logger.Error("cs: MSG <%16s> froward to player %s error: %s", opName, meta.ID, err.Error())
+		return false
+	}
+
+	logger.Info("cs: MSG <%16s>: forwad to player %s sucess ", opName, meta.ID)
+
+	return true
+}
+
+func (meta *ConnMeta) GsToServer(opName, ackName string, content []byte) bool {
+	_, err := meta.Send(content)
+	if err != nil {
+		Servers.Logout(meta)
+		logger.Error("gs: MSG <%16s> ACK <%16s> send to server %s error: %s", opName, ackName, meta.ID, err.Error())
+		return false
+	}
+
+	logger.Info("gs: MSG <%16s>: server %s, ACK <%16s> send sucess", opName, meta.ID, ackName)
+
+	return true
+}
+
+func (meta *ConnMeta) CsToServer(opName string, content []byte) bool {
+	_, err := meta.Send(content)
+	if err != nil {
+		Servers.Logout(meta)
+		logger.Error("gateway: MSG <%16s> froward to server %s error: %s", opName, meta.ID, err.Error())
+		return false
+	}
+
+	logger.Info("gateway: MSG <%16s>: forwad to server %s sucess ", opName, meta.ID)
+
+	return true
 }

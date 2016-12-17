@@ -9,7 +9,7 @@ const (
     MT_LogoutAck         =  MsgType(  4)
 )
 
-var gnetmsgtypesNames = map[MsgType]string {
+var csmsgtypesNames = map[MsgType]string {
     MT_Blank            :  "MT_Blank",
     MT_LoginReq         :  "MT_LoginReq",
     MT_LoginAck         :  "MT_LoginAck",
