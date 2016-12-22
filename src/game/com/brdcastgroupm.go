@@ -57,6 +57,21 @@ func NewBrdCastGroup4Server(serverId IdString, groupId IdString) (*BrdCastGroup)
     return grp
 }
 
+func AddBrdCastGroup4Server(serverId IdString, grp *BrdCastGroup) bool {
+    bm, ok := brdCastGroupsByServer[serverId]
+    if !ok {
+        brdCastGroupsByServer[serverId] = &BrdCastGroupManage{
+            groups: make(map[IdString]*BrdCastGroup),
+        }
+    }
+
+    if  _, ok = bm.FindGroup(grp.Id); !ok {
+       bm.AddGroup(grp)
+    }
+
+    return false
+}
+
 
 type BrdCastGroupManage struct {
     groups map[IdString]*BrdCastGroup
@@ -74,9 +89,13 @@ func (bm *BrdCastGroupManage) NewGroup(creator IdString) *BrdCastGroup {
     bm.groups[grp.Id] = grp
     bm.lock.Unlock()
 
-    grp.AddMember(creator)
-
     return grp
+}
+
+func (bm *BrdCastGroupManage) AddGroup(grp *BrdCastGroup) {
+    bm.lock.Lock()
+    bm.groups[grp.Id] = grp
+    bm.lock.Unlock()
 }
 
 func (bm *BrdCastGroupManage) FindGroup(groupId IdString) (*BrdCastGroup, bool) {

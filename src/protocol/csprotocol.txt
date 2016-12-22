@@ -21,6 +21,21 @@ new {
 }
 
 new {
-    code:   3, action: LogoutReq, reaction: LogoutAck ,
-    code:   4, action: LogoutAck;
+    code:   3, action: LogoutReq, reaction: LogoutAck,
+    code:   4, action: LogoutAck,
+}
+
+
+new {
+    code:   8, action: LoginRoomReq, payload: LoginRoomReq, reaction: LoginRoomAck,
+    code:   9, action: LoginRoomAck,
+}
+
+new {
+    code:   11, action: ScreenChangeNotify, reaction: ScreenChangeNotify,
+}
+
+new {
+    code:   12, action: LeaveRoomReq, reaction: LeaveRoomAck,
+    code:   13, action: LeaveRoomAck,
 }

@@ -65,7 +65,7 @@ func (s *AsyncSender) GetAsyncNetMessages() []*NetMsg {
 }
 
 //self motivated
-func (s *AsyncSender) SendInstant(code MsgType, flag uint32, receiver IdString, payload pb.Message) {
+func (s *AsyncSender) instantSend(code MsgType, flag uint32, payload pb.Message, receiver IdString) {
 	sp := &NetMsg{}
 	sp.ObjectID = receiver.ToObjectID()
 	sp.SetPayLoad(code, payload, flag)
@@ -75,4 +75,16 @@ func (s *AsyncSender) SendInstant(code MsgType, flag uint32, receiver IdString, 
 	msg.SetMeta(s.serverName, s.serverCoon)
 
 	s.msgPool.Append(msg)
+}
+
+func (s *AsyncSender) InstantSendClientNotify(code MsgType, userId IdString, notify pb.Message) {
+	s.instantSend(code, NetMsgIdFlagClient, notify, userId)
+}
+
+func (s *AsyncSender) InstantSendServerNotify(code MsgType, notify pb.Message) {
+	s.instantSend(code, NetMsgIdFlagServer, notify, MyServerId)
+}
+
+func (s *AsyncSender) InstantSendBroadCastNotify(code MsgType, groupId IdString, notify pb.Message) {
+	s.instantSend(code, NetMsgIdFlagBroadCast, notify, groupId)
 }

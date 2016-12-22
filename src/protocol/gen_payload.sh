@@ -17,7 +17,7 @@ do
     cp $payload $TARGET_PROTO
     protoc --go_out . $TARGET_PROTO
     goStyle=`echo ${payload%.*} | awk '{print tolower($0)}'`
-    mv $TARGET_GO ../types/${goStyle}.go
-    rm $TARGET_PROTO
+    cat $TARGET_GO | sed "s/fileDescriptor0/fileDescriptor_${goStyle}/g" > ../types/${goStyle}.go
+    rm $TARGET_PROTO $TARGET_GO
 done
 

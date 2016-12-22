@@ -8,9 +8,11 @@ import (
 
 //client req message, forward to server with userId
 func GatewayOnClientMessage(clientMeta *gm.ConnMeta, msg *NetMsg) bool {
-
-	if clientMeta.ForwardMeta == nil {
+	code := msg.Code()
+	switch code {
+	case MT_LoginReq:
 		gm.Clients.Login(clientMeta, msg.Content)
+		//broadcast login request
 	}
 
 	logger.Info("gateway: MSG <%16s> from player <%s> received", clientMeta.ID, msg.TypeString())

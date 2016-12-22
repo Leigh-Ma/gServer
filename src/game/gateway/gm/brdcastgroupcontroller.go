@@ -14,7 +14,7 @@ func Handle_BrdCastAddMemberReq(objectId IdString, opCode MsgType, req *BrdCastG
 		grp = NewBrdCastGroup4Server(objectId, IdString(req.GroupId))
 	}
 
-	ack.MemberNum = grp.AddMembers(req.MemberIds...)
+	ack.MemberNum = grp.AddBcgMembers(req.MemberIds...)
 
 	ack.Common = serverCommonAck(OK)
 
@@ -31,7 +31,7 @@ func Handle_BrdCastDelMemberReq(objectId IdString, opCode MsgType, req *BrdCastG
 	}
 
 	for _, memberId := range req.MemberIds {
-		ack.MemberNum, ok = grp.DelMember(IdString(memberId))
+		ack.MemberNum, ok = grp.DelBcgMember(IdString(memberId))
 		if !ok {
 			logger.Warn("broadcsat group %s delete member %s error", req.GroupId, memberId)
 		}
@@ -65,7 +65,7 @@ func Handle_BrdCastSyncReq(objectId IdString, opCode MsgType, req *BrdCastGroupM
 		grp = NewBrdCastGroup4Server(objectId, IdString(req.GroupId))
 	}
 
-	ack.MemberNum = grp.ResetMembers()
+	ack.MemberNum = grp.ResetBcgMembers()
 	ack.Common = serverCommonAck(OK)
 
 	return ack

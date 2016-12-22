@@ -32,3 +32,63 @@ message LogoutReq{
 message LogoutAck{
     string user_id = 1;
 }
+
+
+message ScreenActive {
+	string Id        = 1;
+	int32  DirectX   = 2;
+	int32  DirectY   = 3;
+	int32  Speed     = 4;
+	int32  PosX      = 5;
+	int32  PosY      = 6;
+
+	string BelongsTo = 7;
+	string Name      = 8;
+	int32  Type      = 9;
+	int32  SubType   = 10;
+	int32  Skin      = 11;
+
+	int32  Hp        = 12;
+	int32  FullHp    = 13;
+}
+
+message ScreenDecoration {
+	int32 AssetId  = 1;
+	int32 X        = 2;
+	int32 Y        = 3;
+}
+
+message ScreenInfo{
+	int64    frame_id = 1;
+	int32    width    = 2;
+	int32    height   = 3;
+	repeated ScreenActive actives = 4;
+	repeated ScreenDecoration decorations = 5;
+}
+
+message ScreenChangeNotify{
+	int64    frame_id = 1;
+	repeated ScreenActive add_actives = 2;
+	repeated ScreenDecoration add_decorations = 3;
+	repeated string del_active_ids = 4;
+	repeated ScreenDecoration del_decorations = 5;
+}
+
+message LoginRoomReq {
+	string room_id = 1;
+	int32  pos_x   = 2;
+	int32  pos_y   = 3;
+}
+
+message LoginRoomAck {
+	CommonAck common  = 1;
+	ScreenInfo screen = 2;
+}
+
+message LeaveRoomReq{
+	string room_id = 1;
+}
+
+message LeaveRoomAck {
+	CommonAck common  = 1;
+}

@@ -40,7 +40,7 @@ type ServerCommonAck struct {
 func (m *ServerCommonAck) Reset()                    { *m = ServerCommonAck{} }
 func (m *ServerCommonAck) String() string            { return proto.CompactTextString(m) }
 func (*ServerCommonAck) ProtoMessage()               {}
-func (*ServerCommonAck) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
+func (*ServerCommonAck) Descriptor() ([]byte, []int) { return fileDescriptor_gspayload, []int{0} }
 
 func (m *ServerCommonAck) GetErrCode() int32 {
 	if m != nil {
@@ -57,7 +57,7 @@ type ServerLoginReq struct {
 func (m *ServerLoginReq) Reset()                    { *m = ServerLoginReq{} }
 func (m *ServerLoginReq) String() string            { return proto.CompactTextString(m) }
 func (*ServerLoginReq) ProtoMessage()               {}
-func (*ServerLoginReq) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
+func (*ServerLoginReq) Descriptor() ([]byte, []int) { return fileDescriptor_gspayload, []int{1} }
 
 func (m *ServerLoginReq) GetServerId() string {
 	if m != nil {
@@ -81,7 +81,7 @@ type ServerLoginAck struct {
 func (m *ServerLoginAck) Reset()                    { *m = ServerLoginAck{} }
 func (m *ServerLoginAck) String() string            { return proto.CompactTextString(m) }
 func (*ServerLoginAck) ProtoMessage()               {}
-func (*ServerLoginAck) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
+func (*ServerLoginAck) Descriptor() ([]byte, []int) { return fileDescriptor_gspayload, []int{2} }
 
 func (m *ServerLoginAck) GetCommon() *ServerCommonAck {
 	if m != nil {
@@ -104,7 +104,7 @@ type ServerLoginOutReq struct {
 func (m *ServerLoginOutReq) Reset()                    { *m = ServerLoginOutReq{} }
 func (m *ServerLoginOutReq) String() string            { return proto.CompactTextString(m) }
 func (*ServerLoginOutReq) ProtoMessage()               {}
-func (*ServerLoginOutReq) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
+func (*ServerLoginOutReq) Descriptor() ([]byte, []int) { return fileDescriptor_gspayload, []int{3} }
 
 func (m *ServerLoginOutReq) GetStatus() int32 {
 	if m != nil {
@@ -121,7 +121,7 @@ type BrdCastGroupManageReq struct {
 func (m *BrdCastGroupManageReq) Reset()                    { *m = BrdCastGroupManageReq{} }
 func (m *BrdCastGroupManageReq) String() string            { return proto.CompactTextString(m) }
 func (*BrdCastGroupManageReq) ProtoMessage()               {}
-func (*BrdCastGroupManageReq) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
+func (*BrdCastGroupManageReq) Descriptor() ([]byte, []int) { return fileDescriptor_gspayload, []int{4} }
 
 func (m *BrdCastGroupManageReq) GetGroupId() string {
 	if m != nil {
@@ -146,7 +146,7 @@ type BrdCastGroupManageAck struct {
 func (m *BrdCastGroupManageAck) Reset()                    { *m = BrdCastGroupManageAck{} }
 func (m *BrdCastGroupManageAck) String() string            { return proto.CompactTextString(m) }
 func (*BrdCastGroupManageAck) ProtoMessage()               {}
-func (*BrdCastGroupManageAck) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
+func (*BrdCastGroupManageAck) Descriptor() ([]byte, []int) { return fileDescriptor_gspayload, []int{5} }
 
 func (m *BrdCastGroupManageAck) GetCommon() *ServerCommonAck {
 	if m != nil {
@@ -178,9 +178,9 @@ func init() {
 	proto.RegisterType((*BrdCastGroupManageAck)(nil), "BrdCastGroupManageAck")
 }
 
-func init() { proto.RegisterFile("types.proto", fileDescriptor1) }
+func init() { proto.RegisterFile("types.proto", fileDescriptor_gspayload) }
 
-var fileDescriptor1 = []byte{
+var fileDescriptor_gspayload = []byte{
 	// 271 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x94, 0x51, 0x5d, 0x4b, 0xf3, 0x30,
 	0x18, 0xa5, 0x1b, 0xeb, 0xd6, 0xa7, 0xf0, 0xbe, 0x5a, 0x50, 0x2a, 0x22, 0x4a, 0xae, 0x06, 0xca,

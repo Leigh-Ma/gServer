@@ -19,7 +19,7 @@ func NewBrdCastGroup(creator IdString) *BrdCastGroup {
     }
 }
 
-func (bcg *BrdCastGroup) GroupDetail() *BrdCastGroupManageReq {
+func (bcg *BrdCastGroup) BcgGroupDetail() *BrdCastGroupManageReq {
     detail := &BrdCastGroupManageReq{
         GroupId:   string(bcg.Id),
         MemberIds: make([]string, len(bcg.Members)),
@@ -34,7 +34,7 @@ func (bcg *BrdCastGroup) GroupDetail() *BrdCastGroupManageReq {
     return detail
 }
 
-func (bcg *BrdCastGroup) ResetMembers(memberIds... string) int32 {
+func (bcg *BrdCastGroup) ResetBcgMembers(memberIds... string) int32 {
     bcg.lock.Lock()
 
     for id := range bcg.Members {
@@ -50,7 +50,7 @@ func (bcg *BrdCastGroup) ResetMembers(memberIds... string) int32 {
     return int32(len(memberIds))
 }
 
-func (bcg *BrdCastGroup) AddMember(memberId IdString) int32 {
+func (bcg *BrdCastGroup) AddBcgMember(memberId IdString) int32 {
     bcg.lock.Lock()
 
     index := len(bcg.Members)
@@ -64,7 +64,7 @@ func (bcg *BrdCastGroup) AddMember(memberId IdString) int32 {
     return int32(index) //member num
 }
 
-func (bcg *BrdCastGroup) AddMembers(memberIds... string) int32 {
+func (bcg *BrdCastGroup) AddBcgMembers(memberIds... string) int32 {
     bcg.lock.Lock()
     index := len(bcg.Members)
     for _, memberId := range memberIds{
@@ -79,7 +79,7 @@ func (bcg *BrdCastGroup) AddMembers(memberIds... string) int32 {
     return int32(index) //member num
 }
 
-func (bcg *BrdCastGroup) DelMember(memberId IdString) (int32, bool) {
+func (bcg *BrdCastGroup) DelBcgMember(memberId IdString) (int32, bool) {
     bcg.lock.Lock()
 
     index, ok := bcg.Members[memberId]
@@ -100,7 +100,7 @@ func (bcg *BrdCastGroup) DelMember(memberId IdString) (int32, bool) {
     return int32(num), true //member num
 }
 
-func (bcg *BrdCastGroup) MemberNum() (int32) {
+func (bcg *BrdCastGroup) BcgMemberNum() (int32) {
     bcg.lock.Lock()
     num := len(bcg.Members)
     bcg.lock.Unlock()

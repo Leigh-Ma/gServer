@@ -16,6 +16,14 @@ It has these top-level messages:
 	LoginAck
 	LogoutReq
 	LogoutAck
+	ScreenActive
+	ScreenDecoration
+	ScreenInfo
+	ScreenChangeNotify
+	LoginRoomReq
+	LoginRoomAck
+	LeaveRoomReq
+	LeaveRoomAck
 */
 package types
 
@@ -43,7 +51,7 @@ type CommonAck struct {
 func (m *CommonAck) Reset()                    { *m = CommonAck{} }
 func (m *CommonAck) String() string            { return proto.CompactTextString(m) }
 func (*CommonAck) ProtoMessage()               {}
-func (*CommonAck) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
+func (*CommonAck) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{0} }
 
 func (m *CommonAck) GetStatus() int32 {
 	if m != nil {
@@ -73,7 +81,7 @@ type BlankMsg struct {
 func (m *BlankMsg) Reset()                    { *m = BlankMsg{} }
 func (m *BlankMsg) String() string            { return proto.CompactTextString(m) }
 func (*BlankMsg) ProtoMessage()               {}
-func (*BlankMsg) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
+func (*BlankMsg) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{1} }
 
 func (m *BlankMsg) GetHelper() bool {
 	if m != nil {
@@ -90,7 +98,7 @@ type HeadBeat struct {
 func (m *HeadBeat) Reset()                    { *m = HeadBeat{} }
 func (m *HeadBeat) String() string            { return proto.CompactTextString(m) }
 func (*HeadBeat) ProtoMessage()               {}
-func (*HeadBeat) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
+func (*HeadBeat) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{2} }
 
 func (m *HeadBeat) GetTimeStamp() int32 {
 	if m != nil {
@@ -115,7 +123,7 @@ type LoginReq struct {
 func (m *LoginReq) Reset()                    { *m = LoginReq{} }
 func (m *LoginReq) String() string            { return proto.CompactTextString(m) }
 func (*LoginReq) ProtoMessage()               {}
-func (*LoginReq) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
+func (*LoginReq) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{3} }
 
 func (m *LoginReq) GetUserId() string {
 	if m != nil {
@@ -145,7 +153,7 @@ type LoginAck struct {
 func (m *LoginAck) Reset()                    { *m = LoginAck{} }
 func (m *LoginAck) String() string            { return proto.CompactTextString(m) }
 func (*LoginAck) ProtoMessage()               {}
-func (*LoginAck) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
+func (*LoginAck) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{4} }
 
 func (m *LoginAck) GetCommon() *CommonAck {
 	if m != nil {
@@ -161,7 +169,7 @@ type LogoutReq struct {
 func (m *LogoutReq) Reset()                    { *m = LogoutReq{} }
 func (m *LogoutReq) String() string            { return proto.CompactTextString(m) }
 func (*LogoutReq) ProtoMessage()               {}
-func (*LogoutReq) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
+func (*LogoutReq) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{5} }
 
 func (m *LogoutReq) GetUserId() string {
 	if m != nil {
@@ -177,13 +185,341 @@ type LogoutAck struct {
 func (m *LogoutAck) Reset()                    { *m = LogoutAck{} }
 func (m *LogoutAck) String() string            { return proto.CompactTextString(m) }
 func (*LogoutAck) ProtoMessage()               {}
-func (*LogoutAck) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{6} }
+func (*LogoutAck) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{6} }
 
 func (m *LogoutAck) GetUserId() string {
 	if m != nil {
 		return m.UserId
 	}
 	return ""
+}
+
+type ScreenActive struct {
+	Id        string `protobuf:"bytes,1,opt,name=Id" json:"Id,omitempty"`
+	DirectX   int32  `protobuf:"varint,2,opt,name=DirectX" json:"DirectX,omitempty"`
+	DirectY   int32  `protobuf:"varint,3,opt,name=DirectY" json:"DirectY,omitempty"`
+	Speed     int32  `protobuf:"varint,4,opt,name=Speed" json:"Speed,omitempty"`
+	PosX      int32  `protobuf:"varint,5,opt,name=PosX" json:"PosX,omitempty"`
+	PosY      int32  `protobuf:"varint,6,opt,name=PosY" json:"PosY,omitempty"`
+	BelongsTo string `protobuf:"bytes,7,opt,name=BelongsTo" json:"BelongsTo,omitempty"`
+	Name      string `protobuf:"bytes,8,opt,name=Name" json:"Name,omitempty"`
+	Type      int32  `protobuf:"varint,9,opt,name=Type" json:"Type,omitempty"`
+	SubType   int32  `protobuf:"varint,10,opt,name=SubType" json:"SubType,omitempty"`
+	Skin      int32  `protobuf:"varint,11,opt,name=Skin" json:"Skin,omitempty"`
+	Hp        int32  `protobuf:"varint,12,opt,name=Hp" json:"Hp,omitempty"`
+	FullHp    int32  `protobuf:"varint,13,opt,name=FullHp" json:"FullHp,omitempty"`
+}
+
+func (m *ScreenActive) Reset()                    { *m = ScreenActive{} }
+func (m *ScreenActive) String() string            { return proto.CompactTextString(m) }
+func (*ScreenActive) ProtoMessage()               {}
+func (*ScreenActive) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{7} }
+
+func (m *ScreenActive) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *ScreenActive) GetDirectX() int32 {
+	if m != nil {
+		return m.DirectX
+	}
+	return 0
+}
+
+func (m *ScreenActive) GetDirectY() int32 {
+	if m != nil {
+		return m.DirectY
+	}
+	return 0
+}
+
+func (m *ScreenActive) GetSpeed() int32 {
+	if m != nil {
+		return m.Speed
+	}
+	return 0
+}
+
+func (m *ScreenActive) GetPosX() int32 {
+	if m != nil {
+		return m.PosX
+	}
+	return 0
+}
+
+func (m *ScreenActive) GetPosY() int32 {
+	if m != nil {
+		return m.PosY
+	}
+	return 0
+}
+
+func (m *ScreenActive) GetBelongsTo() string {
+	if m != nil {
+		return m.BelongsTo
+	}
+	return ""
+}
+
+func (m *ScreenActive) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *ScreenActive) GetType() int32 {
+	if m != nil {
+		return m.Type
+	}
+	return 0
+}
+
+func (m *ScreenActive) GetSubType() int32 {
+	if m != nil {
+		return m.SubType
+	}
+	return 0
+}
+
+func (m *ScreenActive) GetSkin() int32 {
+	if m != nil {
+		return m.Skin
+	}
+	return 0
+}
+
+func (m *ScreenActive) GetHp() int32 {
+	if m != nil {
+		return m.Hp
+	}
+	return 0
+}
+
+func (m *ScreenActive) GetFullHp() int32 {
+	if m != nil {
+		return m.FullHp
+	}
+	return 0
+}
+
+type ScreenDecoration struct {
+	AssetId int32 `protobuf:"varint,1,opt,name=AssetId" json:"AssetId,omitempty"`
+	X       int32 `protobuf:"varint,2,opt,name=X" json:"X,omitempty"`
+	Y       int32 `protobuf:"varint,3,opt,name=Y" json:"Y,omitempty"`
+}
+
+func (m *ScreenDecoration) Reset()                    { *m = ScreenDecoration{} }
+func (m *ScreenDecoration) String() string            { return proto.CompactTextString(m) }
+func (*ScreenDecoration) ProtoMessage()               {}
+func (*ScreenDecoration) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{8} }
+
+func (m *ScreenDecoration) GetAssetId() int32 {
+	if m != nil {
+		return m.AssetId
+	}
+	return 0
+}
+
+func (m *ScreenDecoration) GetX() int32 {
+	if m != nil {
+		return m.X
+	}
+	return 0
+}
+
+func (m *ScreenDecoration) GetY() int32 {
+	if m != nil {
+		return m.Y
+	}
+	return 0
+}
+
+type ScreenInfo struct {
+	FrameId     int64               `protobuf:"varint,1,opt,name=frame_id,json=frameId" json:"frame_id,omitempty"`
+	Width       int32               `protobuf:"varint,2,opt,name=width" json:"width,omitempty"`
+	Height      int32               `protobuf:"varint,3,opt,name=height" json:"height,omitempty"`
+	Actives     []*ScreenActive     `protobuf:"bytes,4,rep,name=actives" json:"actives,omitempty"`
+	Decorations []*ScreenDecoration `protobuf:"bytes,5,rep,name=decorations" json:"decorations,omitempty"`
+}
+
+func (m *ScreenInfo) Reset()                    { *m = ScreenInfo{} }
+func (m *ScreenInfo) String() string            { return proto.CompactTextString(m) }
+func (*ScreenInfo) ProtoMessage()               {}
+func (*ScreenInfo) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{9} }
+
+func (m *ScreenInfo) GetFrameId() int64 {
+	if m != nil {
+		return m.FrameId
+	}
+	return 0
+}
+
+func (m *ScreenInfo) GetWidth() int32 {
+	if m != nil {
+		return m.Width
+	}
+	return 0
+}
+
+func (m *ScreenInfo) GetHeight() int32 {
+	if m != nil {
+		return m.Height
+	}
+	return 0
+}
+
+func (m *ScreenInfo) GetActives() []*ScreenActive {
+	if m != nil {
+		return m.Actives
+	}
+	return nil
+}
+
+func (m *ScreenInfo) GetDecorations() []*ScreenDecoration {
+	if m != nil {
+		return m.Decorations
+	}
+	return nil
+}
+
+type ScreenChangeNotify struct {
+	FrameId        int64               `protobuf:"varint,1,opt,name=frame_id,json=frameId" json:"frame_id,omitempty"`
+	AddActives     []*ScreenActive     `protobuf:"bytes,2,rep,name=add_actives,json=addActives" json:"add_actives,omitempty"`
+	AddDecorations []*ScreenDecoration `protobuf:"bytes,3,rep,name=add_decorations,json=addDecorations" json:"add_decorations,omitempty"`
+	DelActiveIds   []string            `protobuf:"bytes,4,rep,name=del_active_ids,json=delActiveIds" json:"del_active_ids,omitempty"`
+	DelDecorations []*ScreenDecoration `protobuf:"bytes,5,rep,name=del_decorations,json=delDecorations" json:"del_decorations,omitempty"`
+}
+
+func (m *ScreenChangeNotify) Reset()                    { *m = ScreenChangeNotify{} }
+func (m *ScreenChangeNotify) String() string            { return proto.CompactTextString(m) }
+func (*ScreenChangeNotify) ProtoMessage()               {}
+func (*ScreenChangeNotify) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{10} }
+
+func (m *ScreenChangeNotify) GetFrameId() int64 {
+	if m != nil {
+		return m.FrameId
+	}
+	return 0
+}
+
+func (m *ScreenChangeNotify) GetAddActives() []*ScreenActive {
+	if m != nil {
+		return m.AddActives
+	}
+	return nil
+}
+
+func (m *ScreenChangeNotify) GetAddDecorations() []*ScreenDecoration {
+	if m != nil {
+		return m.AddDecorations
+	}
+	return nil
+}
+
+func (m *ScreenChangeNotify) GetDelActiveIds() []string {
+	if m != nil {
+		return m.DelActiveIds
+	}
+	return nil
+}
+
+func (m *ScreenChangeNotify) GetDelDecorations() []*ScreenDecoration {
+	if m != nil {
+		return m.DelDecorations
+	}
+	return nil
+}
+
+type LoginRoomReq struct {
+	RoomId string `protobuf:"bytes,1,opt,name=room_id,json=roomId" json:"room_id,omitempty"`
+	PosX   int32  `protobuf:"varint,2,opt,name=pos_x,json=posX" json:"pos_x,omitempty"`
+	PosY   int32  `protobuf:"varint,3,opt,name=pos_y,json=posY" json:"pos_y,omitempty"`
+}
+
+func (m *LoginRoomReq) Reset()                    { *m = LoginRoomReq{} }
+func (m *LoginRoomReq) String() string            { return proto.CompactTextString(m) }
+func (*LoginRoomReq) ProtoMessage()               {}
+func (*LoginRoomReq) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{11} }
+
+func (m *LoginRoomReq) GetRoomId() string {
+	if m != nil {
+		return m.RoomId
+	}
+	return ""
+}
+
+func (m *LoginRoomReq) GetPosX() int32 {
+	if m != nil {
+		return m.PosX
+	}
+	return 0
+}
+
+func (m *LoginRoomReq) GetPosY() int32 {
+	if m != nil {
+		return m.PosY
+	}
+	return 0
+}
+
+type LoginRoomAck struct {
+	Common *CommonAck  `protobuf:"bytes,1,opt,name=common" json:"common,omitempty"`
+	Screen *ScreenInfo `protobuf:"bytes,2,opt,name=screen" json:"screen,omitempty"`
+}
+
+func (m *LoginRoomAck) Reset()                    { *m = LoginRoomAck{} }
+func (m *LoginRoomAck) String() string            { return proto.CompactTextString(m) }
+func (*LoginRoomAck) ProtoMessage()               {}
+func (*LoginRoomAck) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{12} }
+
+func (m *LoginRoomAck) GetCommon() *CommonAck {
+	if m != nil {
+		return m.Common
+	}
+	return nil
+}
+
+func (m *LoginRoomAck) GetScreen() *ScreenInfo {
+	if m != nil {
+		return m.Screen
+	}
+	return nil
+}
+
+type LeaveRoomReq struct {
+	RoomId string `protobuf:"bytes,1,opt,name=room_id,json=roomId" json:"room_id,omitempty"`
+}
+
+func (m *LeaveRoomReq) Reset()                    { *m = LeaveRoomReq{} }
+func (m *LeaveRoomReq) String() string            { return proto.CompactTextString(m) }
+func (*LeaveRoomReq) ProtoMessage()               {}
+func (*LeaveRoomReq) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{13} }
+
+func (m *LeaveRoomReq) GetRoomId() string {
+	if m != nil {
+		return m.RoomId
+	}
+	return ""
+}
+
+type LeaveRoomAck struct {
+	Common *CommonAck `protobuf:"bytes,1,opt,name=common" json:"common,omitempty"`
+}
+
+func (m *LeaveRoomAck) Reset()                    { *m = LeaveRoomAck{} }
+func (m *LeaveRoomAck) String() string            { return proto.CompactTextString(m) }
+func (*LeaveRoomAck) ProtoMessage()               {}
+func (*LeaveRoomAck) Descriptor() ([]byte, []int) { return fileDescriptor_cspayload, []int{14} }
+
+func (m *LeaveRoomAck) GetCommon() *CommonAck {
+	if m != nil {
+		return m.Common
+	}
+	return nil
 }
 
 func init() {
@@ -194,27 +530,61 @@ func init() {
 	proto.RegisterType((*LoginAck)(nil), "LoginAck")
 	proto.RegisterType((*LogoutReq)(nil), "LogoutReq")
 	proto.RegisterType((*LogoutAck)(nil), "LogoutAck")
+	proto.RegisterType((*ScreenActive)(nil), "ScreenActive")
+	proto.RegisterType((*ScreenDecoration)(nil), "ScreenDecoration")
+	proto.RegisterType((*ScreenInfo)(nil), "ScreenInfo")
+	proto.RegisterType((*ScreenChangeNotify)(nil), "ScreenChangeNotify")
+	proto.RegisterType((*LoginRoomReq)(nil), "LoginRoomReq")
+	proto.RegisterType((*LoginRoomAck)(nil), "LoginRoomAck")
+	proto.RegisterType((*LeaveRoomReq)(nil), "LeaveRoomReq")
+	proto.RegisterType((*LeaveRoomAck)(nil), "LeaveRoomAck")
 }
 
-func init() { proto.RegisterFile("types.proto", fileDescriptor0) }
+func init() { proto.RegisterFile("types.proto", fileDescriptor_cspayload) }
 
-var fileDescriptor0 = []byte{
-	// 266 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x7c, 0x51, 0x3d, 0x4f, 0xc3, 0x30,
-	0x10, 0x55, 0x0b, 0x4d, 0xe3, 0xab, 0x58, 0x3c, 0x40, 0x24, 0x40, 0x42, 0x16, 0x03, 0x53, 0x06,
-	0x98, 0x19, 0x28, 0x0b, 0x95, 0x60, 0x31, 0x6c, 0x0c, 0x95, 0x89, 0x4f, 0x21, 0x6a, 0x1d, 0x87,
-	0xd8, 0x46, 0xe2, 0xdf, 0x63, 0x5f, 0x02, 0x65, 0xa1, 0x9b, 0xdf, 0xc7, 0xbd, 0x7b, 0x3a, 0xc3,
-	0xc2, 0x7f, 0x75, 0xe8, 0xca, 0xae, 0xb7, 0xde, 0x8a, 0x57, 0x60, 0xf7, 0xd6, 0x18, 0xdb, 0xde,
-	0x55, 0x1b, 0x7e, 0x0c, 0x99, 0xf3, 0xca, 0x07, 0x57, 0x4c, 0x2e, 0x26, 0x57, 0x33, 0x39, 0x22,
-	0x7e, 0x06, 0xcc, 0x37, 0x06, 0x9f, 0xbd, 0x32, 0x5d, 0x31, 0x8d, 0xd2, 0x91, 0xdc, 0x11, 0xbc,
-	0x80, 0xb9, 0x41, 0xe7, 0x54, 0x8d, 0xc5, 0x41, 0xd4, 0x98, 0xfc, 0x81, 0x42, 0x40, 0xbe, 0xdc,
-	0xaa, 0x76, 0xf3, 0xe4, 0xea, 0x94, 0xfd, 0x8e, 0xdb, 0x0e, 0x7b, 0xca, 0xce, 0xe5, 0x88, 0xc4,
-	0x2d, 0xe4, 0x0f, 0xa8, 0xf4, 0x12, 0x95, 0xe7, 0xe7, 0x00, 0x29, 0x76, 0xed, 0x68, 0xd1, 0xd0,
-	0xe1, 0xcf, 0x22, 0x0e, 0x87, 0x95, 0xd5, 0x48, 0x0d, 0x66, 0x92, 0xde, 0xe2, 0x05, 0xf2, 0x47,
-	0x5b, 0x37, 0xad, 0xc4, 0x0f, 0x7e, 0x02, 0xf3, 0xe0, 0xb0, 0x5f, 0x37, 0x9a, 0x66, 0x99, 0xcc,
-	0x12, 0x5c, 0xe9, 0x34, 0x18, 0x42, 0x64, 0xa7, 0xc4, 0xd2, 0x9b, 0x9f, 0x02, 0x8b, 0xe2, 0xe7,
-	0x60, 0x1f, 0x7a, 0xe7, 0x03, 0xb1, 0xd2, 0xa2, 0x1c, 0x53, 0xd3, 0x51, 0x04, 0x64, 0x15, 0x5d,
-	0x88, 0x42, 0x17, 0xd7, 0x50, 0xfe, 0x1e, 0x4c, 0x8e, 0x8a, 0xb8, 0x04, 0x16, 0xfd, 0x36, 0xf8,
-	0x7d, 0x35, 0x76, 0xae, 0x14, 0xfb, 0x9f, 0xeb, 0x2d, 0xa3, 0x8f, 0xb9, 0xf9, 0x0e, 0x00, 0x00,
-	0xff, 0xff, 0x9b, 0x9d, 0x6d, 0x96, 0xa7, 0x01, 0x00, 0x00,
+var fileDescriptor_cspayload = []byte{
+	// 681 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x8c, 0x54, 0x5f, 0x6f, 0xd3, 0x3e,
+	0x14, 0x55, 0xda, 0xb5, 0x4d, 0x6e, 0xba, 0xfd, 0x7e, 0x18, 0x04, 0x41, 0x80, 0x84, 0xcc, 0xa4,
+	0xf1, 0x94, 0x87, 0xed, 0x0d, 0x89, 0x87, 0xfd, 0x11, 0x5a, 0x25, 0x98, 0xc0, 0x9d, 0xc4, 0x2a,
+	0x1e, 0xaa, 0xac, 0xf1, 0xda, 0x68, 0x4d, 0x1c, 0x62, 0x67, 0xb0, 0xef, 0xc4, 0x1b, 0x9f, 0x0f,
+	0x09, 0x5f, 0xdb, 0x69, 0x23, 0xc4, 0x46, 0xdf, 0xee, 0x3d, 0x3e, 0x39, 0xf7, 0xf8, 0xd8, 0x31,
+	0x84, 0xea, 0xb6, 0xe4, 0x32, 0x2e, 0x2b, 0xa1, 0x04, 0xfd, 0x02, 0xc1, 0xb1, 0xc8, 0x73, 0x51,
+	0x1c, 0xce, 0xae, 0xc9, 0x63, 0xe8, 0x4b, 0x95, 0xa8, 0x5a, 0x46, 0xde, 0x4b, 0xef, 0x75, 0x8f,
+	0xb9, 0x8e, 0x3c, 0x87, 0x40, 0x65, 0x39, 0x1f, 0xab, 0x24, 0x2f, 0xa3, 0x8e, 0x5e, 0xda, 0x66,
+	0x6b, 0x80, 0x44, 0x30, 0xc8, 0xb9, 0x94, 0xc9, 0x9c, 0x47, 0x5d, 0xbd, 0x16, 0xb0, 0xa6, 0xa5,
+	0x14, 0xfc, 0xa3, 0x65, 0x52, 0x5c, 0x7f, 0x90, 0x73, 0xd4, 0x5e, 0xf0, 0x65, 0xc9, 0x2b, 0xa3,
+	0xed, 0x33, 0xd7, 0xd1, 0xb7, 0xe0, 0x9f, 0xf2, 0x24, 0x3d, 0xe2, 0x89, 0x22, 0x2f, 0x00, 0x50,
+	0x76, 0x2a, 0xcd, 0x20, 0xeb, 0xa1, 0x35, 0x88, 0xc0, 0xd6, 0x4c, 0xa4, 0xdc, 0x38, 0xe8, 0x31,
+	0x53, 0xd3, 0x73, 0xf0, 0xdf, 0x8b, 0x79, 0x56, 0x30, 0xfe, 0x95, 0x3c, 0x81, 0x41, 0x2d, 0x79,
+	0x35, 0xcd, 0x52, 0xf3, 0x6d, 0xc0, 0xfa, 0xd8, 0x8e, 0x52, 0xfc, 0xb0, 0xae, 0x35, 0xda, 0x31,
+	0xa8, 0xa9, 0xc9, 0x33, 0x08, 0xf4, 0xe2, 0x8d, 0xa5, 0x5b, 0xdf, 0xbe, 0x05, 0x46, 0x29, 0x8d,
+	0x9d, 0x2a, 0x86, 0x42, 0xa1, 0x3f, 0x33, 0x09, 0x19, 0xd1, 0x70, 0x1f, 0xe2, 0x55, 0x60, 0xcc,
+	0xad, 0xd0, 0x5d, 0x08, 0x34, 0x5f, 0xd4, 0xea, 0x3e, 0x1b, 0x6b, 0x16, 0xca, 0xde, 0xc9, 0xfa,
+	0xd1, 0x81, 0xe1, 0x78, 0x56, 0x71, 0xae, 0x27, 0xa8, 0xec, 0x86, 0x93, 0x1d, 0xe8, 0x8c, 0x1a,
+	0x92, 0xae, 0x30, 0xef, 0x93, 0xac, 0xe2, 0x33, 0x75, 0xe1, 0x92, 0x68, 0xda, 0xf5, 0xca, 0xc4,
+	0xec, 0x68, 0xb5, 0x32, 0x21, 0x8f, 0xa0, 0x37, 0x2e, 0x39, 0x4f, 0xa3, 0x2d, 0x83, 0xdb, 0x06,
+	0x73, 0xf9, 0x28, 0xe4, 0x45, 0xd4, 0xb3, 0x81, 0x62, 0xed, 0xb0, 0x49, 0xd4, 0x5f, 0x61, 0x13,
+	0x3c, 0xff, 0x23, 0xbe, 0x14, 0xc5, 0x5c, 0x9e, 0x8b, 0x68, 0x60, 0x8c, 0xac, 0x01, 0xfc, 0xe2,
+	0x2c, 0xc9, 0x79, 0xe4, 0xdb, 0x74, 0xb1, 0x46, 0xec, 0x5c, 0xdf, 0xb2, 0x28, 0xb0, 0x2a, 0x58,
+	0xa3, 0xbb, 0x71, 0x7d, 0x69, 0x60, 0xb0, 0xee, 0x5c, 0x8b, 0xec, 0xf1, 0x75, 0x56, 0x44, 0xa1,
+	0x65, 0x63, 0x8d, 0xbb, 0x3e, 0x2d, 0xa3, 0xa1, 0x41, 0x74, 0x85, 0xf7, 0xe7, 0x5d, 0xbd, 0x5c,
+	0x6a, 0x6c, 0xdb, 0xde, 0x4d, 0xdb, 0xd1, 0x53, 0xf8, 0xdf, 0xa6, 0x75, 0xc2, 0x67, 0xa2, 0x4a,
+	0x54, 0x26, 0x0a, 0x9c, 0x74, 0x28, 0x25, 0x57, 0x2e, 0x36, 0x3d, 0xc9, 0xb5, 0x64, 0x08, 0x5e,
+	0x93, 0x9a, 0x77, 0x81, 0x5d, 0x93, 0x94, 0x37, 0xa1, 0x3f, 0x3d, 0x00, 0x2b, 0x35, 0x2a, 0xae,
+	0x04, 0x79, 0x0a, 0xfe, 0x55, 0xa5, 0xf7, 0xd2, 0x9c, 0x50, 0x97, 0x0d, 0x4c, 0xaf, 0x55, 0x74,
+	0x9a, 0xdf, 0xb2, 0x54, 0x2d, 0x9c, 0x92, 0x6d, 0xec, 0x0d, 0xcf, 0xe6, 0x0b, 0xe5, 0x24, 0x5d,
+	0x47, 0xf6, 0x60, 0x90, 0x98, 0x93, 0x94, 0x3a, 0xfd, 0xae, 0xbe, 0x41, 0xdb, 0x71, 0xfb, 0x7c,
+	0x59, 0xb3, 0x4a, 0x0e, 0x20, 0x4c, 0x57, 0x9b, 0x90, 0xfa, 0x54, 0x90, 0xfc, 0x20, 0xfe, 0x73,
+	0x7b, 0xac, 0xcd, 0xa2, 0xbf, 0x3c, 0x20, 0x96, 0x71, 0xbc, 0x48, 0x8a, 0x39, 0x3f, 0x13, 0x2a,
+	0xbb, 0xba, 0xbd, 0xcf, 0x7d, 0x0c, 0x61, 0x92, 0xa6, 0xd3, 0xc6, 0x53, 0xe7, 0x6f, 0x9e, 0x40,
+	0x33, 0x0e, 0x9d, 0xad, 0x37, 0xf0, 0x1f, 0xf2, 0xdb, 0xd6, 0xba, 0x77, 0x59, 0xdb, 0xd1, 0xcc,
+	0x75, 0x2b, 0xc9, 0x2e, 0xec, 0xa4, 0x7c, 0xe9, 0x66, 0x69, 0x2f, 0x36, 0x82, 0x80, 0x0d, 0x35,
+	0x6a, 0xf5, 0x47, 0xa9, 0x99, 0x80, 0xac, 0x8d, 0x36, 0x8f, 0x7a, 0xad, 0x09, 0xf4, 0x13, 0x0c,
+	0xed, 0x03, 0x20, 0x44, 0xee, 0xfe, 0xbe, 0x4a, 0x97, 0xad, 0xff, 0x0a, 0x5b, 0xbd, 0xed, 0x87,
+	0xd0, 0x2b, 0x85, 0x9c, 0x7e, 0x6f, 0x9e, 0x8f, 0x12, 0x6f, 0xbb, 0x03, 0x6f, 0xdd, 0x91, 0x21,
+	0x38, 0xa1, 0x9f, 0x5b, 0x92, 0x1b, 0xbe, 0x00, 0xe4, 0x95, 0x7e, 0x3a, 0x8d, 0x55, 0x23, 0x1f,
+	0xee, 0x87, 0xf1, 0xfa, 0x2a, 0x31, 0xb7, 0x44, 0xf7, 0xb4, 0x30, 0x4f, 0x74, 0xbc, 0xff, 0xf0,
+	0x4a, 0xf7, 0x5b, 0xc4, 0x0d, 0x1d, 0x5c, 0xf6, 0xcd, 0x83, 0x7e, 0xf0, 0x3b, 0x00, 0x00, 0xff,
+	0xff, 0x60, 0x54, 0x00, 0x51, 0xdf, 0x05, 0x00, 0x00,
 }

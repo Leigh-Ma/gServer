@@ -9,3 +9,15 @@ func Handle_LoginReq(objectId IdString, opCode MsgType, req *LoginReq) interface
 func Handle_LogoutReq(objectId IdString, opCode MsgType, req *LogoutReq) interface{} {
 	return nil
 }
+
+func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) interface{} {
+	return nil
+}
+
+func Handle_ScreenChangeNotify(objectId IdString, opCode MsgType, req *ScreenChangeNotify) interface{} {
+	return nil
+}
+
+func Handle_LeaveRoomReq(objectId IdString, opCode MsgType, req *LeaveRoomReq) interface{} {
+	return nil
+}

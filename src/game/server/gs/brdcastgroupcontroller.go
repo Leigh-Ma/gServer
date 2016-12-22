@@ -12,11 +12,11 @@ func chkAndSyncBrdCastGroup(serverId IdString, ack *BrdCastGroupManageAck) (*com
 		return nil, false
 	}
 
-	if ack.MemberNum == grp.MemberNum() {
+	if ack.MemberNum == grp.BcgMemberNum() {
 		return grp, true
 	}
 
-	play.AsyncSender.SendServerNotify(MT_BrdCastSyncReq, grp.GroupDetail())
+	play.AsyncSender.SendServerNotify(MT_BrdCastSyncReq, grp.BcgGroupDetail())
 
 	return grp, true
 }

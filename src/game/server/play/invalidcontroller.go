@@ -1,4 +1,5 @@
-package cs
+package play
+
 //Auto generated, do not modify unless you know clearly what you are doing.
 import . "types"
 
@@ -11,6 +12,10 @@ func Handle_LogoutAck(objectId IdString, opCode MsgType, ack *LogoutAck) interfa
 }
 
 func Handle_LoginRoomAck(objectId IdString, opCode MsgType, ack *LoginRoomAck) interface{} {
+	return nil
+}
+
+func Handle_ScreenChangeNotify(objectId IdString, opCode MsgType, ack *ScreenChangeNotify) interface{} {
 	return nil
 }
 
