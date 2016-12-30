@@ -13,6 +13,7 @@ import (
 	"service"
 	//"service/mongo"
 	"game/server/play"
+	"service/mongo"
 	"service/serverhandle"
 	"service/servertcp"
 	"service/timer"
@@ -51,11 +52,12 @@ func main() {
 	protoDealer := serverhandle.NewServerHandle(serverhandle.ServiceName)
 	service.StartService(protoDealer, distributor.BUS)
 
-	//mongosrv := mongo.NewMongo("mongo", "127.0.0.1", "27017")
-	//service.StartService(mongosrv, distributor.BUS)
-
 	protoSvr := servertcp.NewServerTCP(servertcp.ServiceName, "127.0.0.1", "9000")
 	service.StartService(protoSvr, distributor.BUS)
+
+	mongoSrv := mongo.NewMongo("mongo", "127.0.0.1", "27017")
+	service.StartService(mongoSrv, distributor.BUS)
+
 	play.AsyncSender.SetSyncBuffPool(protoSvr.Buffer)
 	play.AsyncSender.SetGsConnection(protoSvr.Name, protoSvr.GS)
 

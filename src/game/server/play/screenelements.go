@@ -1,6 +1,7 @@
 package play
 
 import (
+	"library/config"
 	"sync"
 	"types"
 )
@@ -17,6 +18,29 @@ const (
 	actDirectionRight = 4
 )
 
+type ActDetail struct {
+	BelongsTo types.IdString
+	Name      string
+	SubType   string
+	Hp        int32
+	FullHp    int32
+	Skin      string
+	Skills    []string
+	dirty     bool
+}
+
+func (ad *ActDetail) IsDetailChanged() bool {
+	return ad.dirty
+}
+
+func (ad *ActDetail) SetDetailChanged() {
+	ad.dirty = true
+}
+
+func (ad *ActDetail) ClearDetailChanged() {
+	ad.dirty = false
+}
+
 type ScrMove struct {
 	DirectX int16
 	DirectY int16
@@ -26,37 +50,42 @@ type ScrMove struct {
 }
 
 type ScrActive struct {
-	Id        types.IdString
-	BelongsTo types.IdString
+	Id   types.IdString
+	Type int8
+	Side int8
 	ScrMove
-
-	Name    string
-	Type    int8
-	SubType int8
-	Skin    int8
-
-	Hp     int32
-	FullHp int32
+	ActDetail
 }
 
 func (sa *ScrActive) ToClient() *types.ScreenActive {
 	return &types.ScreenActive{
-		Id: string(sa.Id),
-
+		Id:      string(sa.Id),
+		Type:    int32(sa.Type),
 		DirectX: int32(sa.DirectX),
 		DirectY: int32(sa.DirectY),
 		Speed:   int32(sa.Speed),
 		PosX:    int32(sa.PosX),
 		PosY:    int32(sa.PosY),
-
-		Name:    sa.Name,
-		Type:    int32(sa.Type),
-		SubType: int32(sa.SubType),
-		Skin:    int32(sa.Skin),
-
-		Hp:     sa.Hp,
-		FullHp: sa.FullHp,
+		Side:    config.GetRoomSideName(sa.Side),
 	}
+}
+
+func (sa *ScrActive) Detail() *types.ActiveDetail {
+	ad := &types.ActiveDetail{
+		Id:        string(sa.Id),
+		BelongsTo: string(sa.BelongsTo),
+		Name:      sa.Name,
+		SubType:   sa.SubType,
+		Skin:      sa.Skin,
+		Hp:        int32(sa.Hp),
+		FullHp:    int32(sa.FullHp),
+	}
+	if sa.Type == screenObjTypePlayer {
+		for _, skill := range sa.Skills {
+			ad.Skills = append(ad.Skills, skill)
+		}
+	}
+	return ad
 }
 
 type ScrDecoration struct {
@@ -141,4 +170,35 @@ func toClientDecorations(decorations []*ScrDecoration) []*types.ScreenDecoration
 		sds[idx] = decoration.ToClient()
 	}
 	return sds
+}
+
+func toClientActivesDetails(actives map[types.IdString]*ScrActive) []*types.ActiveDetail {
+	if len(actives) == 0 {
+		return nil
+	}
+	ads := make([]*types.ActiveDetail, len(actives))
+	idx := 0
+	for _, act := range actives {
+		ads[idx] = act.Detail()
+		idx += 1
+	}
+
+	return ads
+}
+
+func toChangedActivesDetails(actives map[types.IdString]*ScrActive) []*types.ActiveDetail {
+	if len(actives) == 0 {
+		return nil
+	}
+	ads := make([]*types.ActiveDetail, len(actives))
+	idx := 0
+	for _, act := range actives {
+		if act.IsDetailChanged() {
+			ads[idx] = act.Detail()
+			idx += 1
+			act.ClearDetailChanged()
+		}
+	}
+
+	return ads
 }

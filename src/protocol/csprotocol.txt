@@ -25,17 +25,37 @@ new {
     code:   4, action: LogoutAck,
 }
 
+new {
+    code:   5, action: SetPlayerNameReq, reaction: SetPlayerNameAck,
+    code:   6, action: SetPlayerNameAck,
+}
+
 
 new {
-    code:   8, action: LoginRoomReq, payload: LoginRoomReq, reaction: LoginRoomAck,
-    code:   9, action: LoginRoomAck,
+    code:   7, action: LoginRoomReq, payload: LoginRoomReq, reaction: LoginRoomAck,
+    code:   8, action: LoginRoomAck,
 }
 
 new {
-    code:   11, action: ScreenChangeNotify, reaction: ScreenChangeNotify,
+    code:   9, action: ChoseSideReq, reaction: ChoseSideAck,
+    code:   10, action: ChoseSideAck,
 }
 
 new {
-    code:   12, action: LeaveRoomReq, reaction: LeaveRoomAck,
-    code:   13, action: LeaveRoomAck,
+    code:   101, action: ScreenChangeNotify, reaction: ScreenChangeNotify,
+}
+
+new {
+    code:   11, action: LeaveRoomReq, reaction: LeaveRoomAck,
+    code:   12, action: LeaveRoomAck,
+}
+
+new {
+    code:   13, action: MoveActionReq, reaction: MoveActionAck,
+    code:   14, action: MoveActionAck,
+}
+
+new {
+    code:   15, action: ChoseHeroReq, reaction: ChoseHeroAck,
+    code:   16, action: ChoseHeroAck,
 }

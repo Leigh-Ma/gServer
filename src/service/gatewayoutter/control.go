@@ -69,7 +69,6 @@ func (t *gatewayOutter) gatewayClientConn(connection *net.TCPConn) {
 		if err != nil {
 			logger.Error("%s: read player %s req head[NOID] error: %s",
 				t.Name, clientMeta.ID, err.Error())
-			gm.Clients.Logout(clientMeta)
 			break
 		}
 
@@ -77,7 +76,6 @@ func (t *gatewayOutter) gatewayClientConn(connection *net.TCPConn) {
 		if err != nil {
 			logger.Error("%s:decode player %s req head(NOID) error: %s",
 				t.Name, clientMeta.ID, err.Error())
-			gm.Clients.Logout(clientMeta)
 			break
 		}
 
@@ -87,7 +85,6 @@ func (t *gatewayOutter) gatewayClientConn(connection *net.TCPConn) {
 		if err != nil {
 			logger.Error("%s: read player %s req [%s] payload error",
 				t.Name, clientMeta.ID, msg.TypeString())
-			gm.Clients.Logout(clientMeta)
 			break
 		}
 
@@ -97,4 +94,17 @@ func (t *gatewayOutter) gatewayClientConn(connection *net.TCPConn) {
 	}
 
 	logger.Warn("%s: player %s connection exit", t.Name, clientMeta.ID)
+	//should send logout req to server for client
+	t.noticeServerClientLogout(clientMeta)
+}
+
+func (t *gatewayOutter) noticeServerClientLogout(clientMeta *gm.ConnMeta) {
+	if clientMeta.ForwardMeta != nil {
+		msg := &NetMsg{}
+		msg.MsgType = MT_LogoutReq
+		msg.SetPayLoad(MT_LogoutReq, &LogoutReq{UserId: string(clientMeta.ID)}, NetMsgIdFlagClient)
+		d := dm.NewDataMsg(ServiceName, "gatewayinner", DataMsgFlagC2G, msg)
+		d.SetMeta(t.Name, clientMeta)
+		t.output.WritePipeNoBlock(d)
+	}
 }

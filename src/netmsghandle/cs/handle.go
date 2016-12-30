@@ -31,6 +31,18 @@ func On_LogoutAck(objectId IdString, opCode MsgType, payLoad []byte) interface{}
 	return Handle_LogoutAck(objectId, opCode, req)
 }
 
+func On_SetPlayerNameReq(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &SetPlayerNameReq{}
+	pb.Unmarshal(payLoad, req)
+	return Handle_SetPlayerNameReq(objectId, opCode, req)
+}
+
+func On_SetPlayerNameAck(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &SetPlayerNameAck{}
+	pb.Unmarshal(payLoad, req)
+	return Handle_SetPlayerNameAck(objectId, opCode, req)
+}
+
 func On_LoginRoomReq(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
 	req := &LoginRoomReq{}
 	pb.Unmarshal(payLoad, req)
@@ -41,6 +53,18 @@ func On_LoginRoomAck(objectId IdString, opCode MsgType, payLoad []byte) interfac
 	req := &LoginRoomAck{}
 	pb.Unmarshal(payLoad, req)
 	return Handle_LoginRoomAck(objectId, opCode, req)
+}
+
+func On_ChoseSideReq(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &ChoseSideReq{}
+	pb.Unmarshal(payLoad, req)
+	return Handle_ChoseSideReq(objectId, opCode, req)
+}
+
+func On_ChoseSideAck(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &ChoseSideAck{}
+	pb.Unmarshal(payLoad, req)
+	return Handle_ChoseSideAck(objectId, opCode, req)
 }
 
 func On_ScreenChangeNotify(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
@@ -59,4 +83,28 @@ func On_LeaveRoomAck(objectId IdString, opCode MsgType, payLoad []byte) interfac
 	req := &LeaveRoomAck{}
 	pb.Unmarshal(payLoad, req)
 	return Handle_LeaveRoomAck(objectId, opCode, req)
+}
+
+func On_MoveActionReq(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &MoveActionReq{}
+	pb.Unmarshal(payLoad, req)
+	return Handle_MoveActionReq(objectId, opCode, req)
+}
+
+func On_MoveActionAck(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &MoveActionAck{}
+	pb.Unmarshal(payLoad, req)
+	return Handle_MoveActionAck(objectId, opCode, req)
+}
+
+func On_ChoseHeroReq(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &ChoseHeroReq{}
+	pb.Unmarshal(payLoad, req)
+	return Handle_ChoseHeroReq(objectId, opCode, req)
+}
+
+func On_ChoseHeroAck(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &ChoseHeroAck{}
+	pb.Unmarshal(payLoad, req)
+	return Handle_ChoseHeroAck(objectId, opCode, req)
 }

@@ -1,16 +1,45 @@
 package play
 
-import "types"
+import (
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+	"library/logger"
+	. "types"
+)
 
 type Player struct {
-	UserId    types.IdString
-	SubType   int8
-	Skin      int8
-	Direction int8
+	UserId   IdString
+	Name     string
+	UUID     string
+	HeroName string
+	Skin     string
+	Skills   []string
+	room     *Room
+}
 
-	Name   string
-	Hp     int32
-	FullHp int32
+func (p *Player) FillActiveDetail(sa *ActDetail) {
+	sa.Name = p.Name
+	sa.SubType = p.HeroName
+	sa.Skin = p.Skin
 
-	room *Room
+	//sa.Hp = p.Hp
+	//sa.FullHp = p.FullHp
+}
+
+func (p *Player) UpSert(session *mgo.Session) bool {
+	c := session.Clone().DB(dbName).C(MONGO_COLLECTION_PLAYERS)
+	if _, err := c.Upsert(bson.M{"UserId": string(p.UserId)}, p); err != nil {
+		logger.Error("Player UpSertDb error: %s", err.Error())
+		return false
+	}
+	return true
+}
+
+func (p *Player) Destroy(session *mgo.Session) bool {
+	c := session.Clone().DB(dbName).C(MONGO_COLLECTION_PLAYERS)
+	if err := c.Remove(bson.M{"UserId": string(p.UserId)}); err != nil {
+		logger.Error("Player UpSertDb error: %s", err.Error())
+		return false
+	}
+	return true
 }

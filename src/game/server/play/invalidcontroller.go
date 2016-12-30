@@ -22,3 +22,19 @@ func Handle_ScreenChangeNotify(objectId IdString, opCode MsgType, ack *ScreenCha
 func Handle_LeaveRoomAck(objectId IdString, opCode MsgType, ack *LeaveRoomAck) interface{} {
 	return nil
 }
+
+func Handle_SetPlayerNameAck(objectId IdString, opCode MsgType, ack *SetPlayerNameAck) interface{} {
+	return nil
+}
+
+func Handle_ChoseSideAck(objectId IdString, opCode MsgType, ack *ChoseSideAck) interface{} {
+	return nil
+}
+
+func Handle_MoveActionAck(objectId IdString, opCode MsgType, ack *MoveActionAck) interface{} {
+	return nil
+}
+
+func Handle_ChoseHeroAck(objectId IdString, opCode MsgType, ack *ChoseHeroAck) interface{} {
+	return nil
+}

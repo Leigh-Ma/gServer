@@ -10,21 +10,25 @@ import (
 )
 
 func forwardServerMessageToClient(serverMeta *gm.ConnMeta, msg *NetMsg) bool {
-	opName := msg.TypeString()
+	go func() {
+		opName := msg.TypeString()
 
-	clientMeta, ok := gm.Clients.GetMeta(msg.ToIdString())
-	if !ok || clientMeta.Conn == nil {
-		logger.Error("cs: MSG <%16s>: player %s connection not on", opName, msg.ToIdString())
-		return false
-	}
+		clientMeta, ok := gm.Clients.GetMeta(msg.ToIdString())
+		if !ok || clientMeta.Conn == nil {
+			logger.Error("cs: MSG <%16s>: player %s connection not on", opName, msg.ToIdString())
+			return
+		}
 
-	binary, err := msg.BinaryProtoToClient()
-	if err != nil {
-		logger.Error("cs: MSG <%16s>: payload marshal error %s", opName, err.Error())
-		return false
-	}
+		binary, err := msg.BinaryProtoToClient()
+		if err != nil {
+			logger.Error("cs: MSG <%16s>: payload marshal error %s", opName, err.Error())
+			return
+		}
 
-	return clientMeta.CsToClient(opName, binary)
+		clientMeta.CsToClient(opName, binary)
+		return
+	}()
+	return true
 }
 
 //gateway receives message from server (protocol between server & gateway)
@@ -69,27 +73,29 @@ func handleServer2GatewayMessage(serverMeta *gm.ConnMeta, msg *NetMsg) bool {
 }
 
 func distributeBroadCastMessageToClients(serverMeta *gm.ConnMeta, msg *NetMsg) bool {
-	opName := msg.TypeString()
-	grp, ok := com.FindBrdCastGroup(serverMeta.ID, msg.ObjectID.ToIdString())
-	if !ok {
-		logger.Error("brdcast: MSG: <%16s>, group %s not found", opName, msg.ToIdString())
-		return false
-	}
-
-	binary, err := msg.BinaryProtoToClient()
-	if err != nil {
-		logger.Error("brdcast: MSG: <%16s>, payload marshal error %s", opName, err.Error())
-		return false
-	}
-
-	for playerId := range grp.Members {
-		clientMeta, ok := gm.Clients.GetMeta(playerId)
-		if !ok || clientMeta.Conn == nil {
-			logger.Error("brdcast: MSG <%16s>, player %s meta not valid", opName, playerId)
-			continue
+	go func() {
+		opName := msg.TypeString()
+		grp, ok := com.FindBrdCastGroup(serverMeta.ID, msg.ObjectID.ToIdString())
+		if !ok {
+			logger.Error("brdcast: MSG: <%16s>, group %s not found", opName, msg.ToIdString())
+			return
 		}
-		clientMeta.BroadCastSendClient(opName, binary)
-	}
+
+		binary, err := msg.BinaryProtoToClient()
+		if err != nil {
+			logger.Error("brdcast: MSG: <%16s>, payload marshal error %s", opName, err.Error())
+			return
+		}
+
+		for playerId := range grp.Members {
+			clientMeta, ok := gm.Clients.GetMeta(playerId)
+			if !ok || clientMeta.Conn == nil {
+				logger.Error("brdcast: MSG <%16s>, player %s meta not valid", opName, playerId)
+				continue
+			}
+			clientMeta.BroadCastSendClient(opName, binary)
+		}
+	}()
 
 	return true
 }

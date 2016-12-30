@@ -138,17 +138,16 @@ func (meta *ConnMeta) Send(b []byte) (int, error) {
 }
 
 func (meta *ConnMeta) BroadCastSendClient(opName string, content []byte) {
-	go func() {
-		n, err := meta.Conn.Write(content)
-		if err != nil {
-			Clients.Logout(meta)
-			logger.Error("brdcast: MSG <%16s> send to player %s error: %s",
-				opName, meta.ID, err.Error())
-			return
-		}
-		logger.Info("brdcast: MSG <%16s> foward to player %s success (%d bytes)",
-			opName, meta.ID, n)
-	}()
+	n, err := meta.Conn.Write(content)
+	if err != nil {
+		Clients.Logout(meta)
+		logger.Error("brdcast: MSG <%16s> send to player %s error: %s",
+			opName, meta.ID, err.Error())
+		return
+	}
+	logger.Info("brdcast: MSG <%16s> foward to player %s success (%d bytes)",
+		opName, meta.ID, n)
+
 }
 
 func (meta *ConnMeta) CsToClient(opName string, content []byte) bool {

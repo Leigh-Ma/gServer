@@ -1,7 +1,9 @@
 package play
 
 import (
+	"library/config"
 	. "types"
+	"library/database"
 )
 
 func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) interface{} {
@@ -19,22 +21,25 @@ func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) i
 		room.BeginFrameSync()
 	}
 
-	sa := &ScrActive{
-		Id:        player.UserId,
-		BelongsTo: room.BrdCastGroup.Id,
-		Name:      player.Name,
-
-		Type:    screenObjTypePlayer,
-		SubType: player.SubType,
-		Skin:    player.Skin,
-		Hp:      player.Hp,
-		FullHp:  player.FullHp,
+	sa := room.GetExistActive(player.UserId)
+	if sa == nil {
+		sa = &ScrActive{
+			Id:   player.UserId,
+			Type: screenObjTypePlayer,
+			Side: config.RoomSideMid,
+		}
 	}
+
 	sa.PosX = int16(req.PosX)
 	sa.PosY = int16(req.PosY)
 
+	player.FillActiveDetail(&sa.ActDetail)
+	sa.SetDetailChanged()
+
 	room.AddOrReplaceActive(sa)
 	room.AddBcgMember(player.UserId)
+
+	player.room = room
 
 	bcgSync := &BrdCastGroupManageReq{
 		GroupId:   string(room.BrdCastGroup.Id),
@@ -44,6 +49,8 @@ func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) i
 
 	ack.Screen = room.Screen.ToClient()
 	ack.Common = getCommonAck(OK)
+
+	database.DbUpdate(player)
 
 	return ack
 }
@@ -60,6 +67,7 @@ func Handle_LeaveRoomReq(objectId IdString, opCode MsgType, req *LeaveRoomReq) i
 	room, ok := RoomM.FindRoom(IdString(req.RoomId))
 	if !ok {
 		ack.Common = getCommonAck(ERR_ROOM_NOT_FOUND)
+		return ack
 	}
 
 	room.DelActive(player.UserId)
@@ -75,7 +83,113 @@ func Handle_LeaveRoomReq(objectId IdString, opCode MsgType, req *LeaveRoomReq) i
 			AsyncSender.SendServerNotify(MT_BrdCastDelMemberReq, bcgSync)
 		}
 	}
+	player.room = nil
 
 	ack.Common = getCommonAck(OK)
+	return ack
+}
+
+func Handle_MoveActionReq(objectId IdString, opCode MsgType, req *MoveActionReq) interface{} {
+	ack := &MoveActionAck{}
+	player, ok := OnlineM.GetOnlinePlayer(objectId)
+	if !ok {
+		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
+		return ack
+	}
+
+	room := player.room
+	if room == nil {
+		ack.Common = getCommonAck(ERR_SHOULD_LOGIN_ROOM)
+		return ack
+	}
+
+	sa := room.GetExistActive(player.UserId)
+	if sa == nil {
+		ack.Common = getCommonAck(ERR_SHOULD_LOGIN_ROOM)
+		return ack
+	}
+
+	sa.PosX = int16(req.PosX)
+	sa.PosY = int16(req.PosY)
+	sa.DirectX = int16(req.DirectX)
+	sa.DirectY = int16(req.DirectY)
+	sa.Speed = int16(req.Speed)
+	sa.Hp = req.Hp
+	sa.FullHp = req.FullHp
+
+	sa.SetDetailChanged()
+	room.AddOrReplaceActive(sa)
+	room.AddBcgMember(player.UserId)
+
+	return nil
+}
+
+func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) interface{} {
+	ack := &ChoseSideAck{}
+	player, ok := OnlineM.GetOnlinePlayer(objectId)
+	if !ok {
+		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
+		return ack
+	}
+
+	room := player.room
+	if room == nil {
+		ack.Common = getCommonAck(ERR_SHOULD_LOGIN_ROOM)
+		return ack
+	}
+
+	sa := room.GetExistActive(player.UserId)
+	if sa == nil {
+		ack.Common = getCommonAck(ERR_SHOULD_LOGIN_ROOM)
+		return ack
+	}
+
+	sa.Side = config.GetRoomSideNo(req.Side)
+	room.AddOrReplaceActive(sa)
+
+	ack.Common = getCommonAck(OK)
+
+	return ack
+}
+
+func Handle_ChoseHeroReq(objectId IdString, opCode MsgType, req *ChoseHeroReq) interface{} {
+	ack := &ChoseHeroAck{}
+	player, ok := OnlineM.GetOnlinePlayer(objectId)
+	if !ok {
+		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
+		return ack
+	}
+
+	if !config.IsValidHeroName(req.HeroName) {
+		ack.Common = getCommonAck(ERR_HERO_NOT_EXIST)
+		return ack
+	}
+
+	for _, skill := range req.HeroSkills {
+		if !config.IsValidHeroSkill(skill) {
+			ack.Common = getCommonAck(ERR_SKILL_NOT_EXIST)
+			return ack
+		}
+	}
+
+	player.HeroName = req.HeroName
+	player.Skills = make([]string, len(req.HeroSkills))
+	copy(player.Skills, req.HeroSkills)
+
+	room := player.room
+	if room != nil {
+		sa := room.GetExistActive(player.UserId)
+		if sa != nil {
+			sa.Skin = req.HeroSkin
+			sa.Skills = make([]string, len(req.HeroSkills))
+			copy(sa.Skills, req.HeroSkills)
+			sa.SubType = req.HeroName
+			sa.SetDetailChanged()
+			room.AddOrReplaceActive(sa)
+		}
+	}
+
+	ack.Common = getCommonAck(OK)
+
 	return ack
 }

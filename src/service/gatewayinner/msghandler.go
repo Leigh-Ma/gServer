@@ -8,15 +8,20 @@ import (
 
 //client req message, forward to server with userId
 func GatewayOnClientMessage(clientMeta *gm.ConnMeta, msg *NetMsg) bool {
+	logger.Info("gateway: MSG <%16s> from player <%s> received", clientMeta.ID, msg.TypeString())
+
+	serverMeta := clientMeta.ForwardMeta
+
 	code := msg.Code()
 	switch code {
 	case MT_LoginReq:
 		gm.Clients.Login(clientMeta, msg.Content)
-		//broadcast login request
+		serverMeta = clientMeta.ForwardMeta
+	case MT_LogoutReq:
+		serverMeta = clientMeta.ForwardMeta
+		gm.Clients.Logout(clientMeta)
 	}
 
-	logger.Info("gateway: MSG <%16s> from player <%s> received", clientMeta.ID, msg.TypeString())
-	serverMeta := clientMeta.ForwardMeta
 	if serverMeta == nil {
 		logger.Error("gateway: player %s, server not distributed", clientMeta.ID)
 	}

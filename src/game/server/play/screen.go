@@ -33,6 +33,11 @@ func (se *Screen) initDecorations() {
 
 }
 
+func (scr *Screen) GetExistActive(actId IdString) *ScrActive {
+	act := scr.Actives[actId]
+	return act
+}
+
 func (scr *Screen) AddOrReplaceActive(act *ScrActive) {
 	scr.addOrReplaceActive(act)
 	scr.add.addOrReplaceActive(act)
@@ -53,6 +58,7 @@ func (scr *Screen) ToClient() *ScreenInfo {
 	scr.Lock()
 	si.Decorations = toClientDecorations(scr.Decorations)
 	si.Actives = toClientActives(scr.Actives)
+	si.Details = toClientActivesDetails(scr.Actives)
 	scr.Unlock()
 
 	return si
@@ -73,6 +79,7 @@ func (scr *Screen) ScreenChangeNotify() *ScreenChangeNotify {
 
 	si := &ScreenChangeNotify{FrameId: scr.FrameId}
 	si.AddActives = toClientActives(add.Actives)
+	si.ActiveDetails = toChangedActivesDetails(add.Actives)
 	si.DelActiveIds = toClientActivesIds(del.Actives)
 	si.AddDecorations = toClientDecorations(add.Decorations)
 	si.DelDecorations = toClientDecorations(del.Decorations)

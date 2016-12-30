@@ -10,7 +10,15 @@ func Handle_LogoutReq(objectId IdString, opCode MsgType, req *LogoutReq) interfa
 	return nil
 }
 
+func Handle_SetPlayerNameReq(objectId IdString, opCode MsgType, req *SetPlayerNameReq) interface{} {
+	return nil
+}
+
 func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) interface{} {
+	return nil
+}
+
+func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) interface{} {
 	return nil
 }
 
@@ -19,5 +27,13 @@ func Handle_ScreenChangeNotify(objectId IdString, opCode MsgType, req *ScreenCha
 }
 
 func Handle_LeaveRoomReq(objectId IdString, opCode MsgType, req *LeaveRoomReq) interface{} {
+	return nil
+}
+
+func Handle_MoveActionReq(objectId IdString, opCode MsgType, req *MoveActionReq) interface{} {
+	return nil
+}
+
+func Handle_ChoseHeroReq(objectId IdString, opCode MsgType, req *ChoseHeroReq) interface{} {
 	return nil
 }
