@@ -34,19 +34,20 @@ func NewUserManager() *UserManager {
 	}
 }
 
-func (um *UserManager) LoadAllFrommDb(session *mgo.Session) {
+func (um *UserManager) LoadAllFrommDb(session *mgo.Session) bool {
 	c := session.Clone().DB(MONGO_DB_NAME).C(MONGO_COLLECTION_PLAYERS)
 	remain, err := c.Count()
+	total := remain
 
 	if err != nil {
 		logger.Error("Load User From DataBase read count error: %s", err.Error())
-		return
+		return false
 	}
 
 	cursor, step := 0, 1000
 	for {
 		if remain <= 0 {
-			return
+			break
 		}
 
 		if remain < step {
@@ -57,7 +58,7 @@ func (um *UserManager) LoadAllFrommDb(session *mgo.Session) {
 		err = c.Find(nil).Skip(cursor).Limit(step).All(&users)
 		if err != nil {
 			logger.Error("Load User From DataBase get data error: %s", err.Error())
-			return
+			return false
 		}
 
 		for _, user := range users {
@@ -68,7 +69,8 @@ func (um *UserManager) LoadAllFrommDb(session *mgo.Session) {
 		cursor += step
 		remain -= step
 	}
-
+	logger.Info("Load %d Users From DataBase", total)
+	return true
 }
 
 func (um *UserManager) GetByUserId(userId IdString) (*User, bool) {

@@ -12,6 +12,7 @@ import (
 	"library/logger"
 	"service"
 	//"service/mongo"
+	"game/gateway/gm"
 	"service/gatewayinner"
 	"service/gatewayoutter"
 	"service/mongo"
@@ -50,6 +51,8 @@ func main() {
 
 	mongoSrv := mongo.NewMongo("mongo", "127.0.0.1", "27017")
 	service.StartService(mongoSrv, distributor.BUS)
+
+	gm.UserM.LoadAllFrommDb(mongoSrv.DbSession())
 
 	serverDealer := gatewayinner.NewGatewayInner(gatewayinner.ServiceName, "0.0.0.0", "9000")
 	service.StartService(serverDealer, distributor.BUS)

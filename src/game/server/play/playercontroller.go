@@ -7,28 +7,35 @@ import (
 
 func Handle_LoginReq(objectId IdString, opCode MsgType, req *LoginReq) interface{} {
 	ack := &LoginAck{}
-	player, ok := OnlineM.GetOnlinePlayer(objectId)
-	if ok {
-		ack.Common = getCommonAck(OK)
-		return ack
+	player, ok := OnlineM.GetOnePlayer(objectId)
+	if !ok {
+		player, ok = AllPlayerM.GetOnePlayer(objectId)
+	}
+	if !ok {
+		player = &Player{
+			UserId: objectId,
+			Name:   RandomPlayerName(),
+			UUID:   req.Uuid,
+		}
+		player.Hero = *NewHero()
 	}
 
-	player = &Player{
-		UserId: objectId,
-		Name:   "sg_welcome",
-		UUID:   req.Uuid,
-	}
-
+	hero := player.Hero
 	//query or create from db
-	OnlineM.AddOnlinePlayer(player)
+	OnlineM.AddOnePlayer(player)
 	ack.Common = getCommonAck(OK)
+	ack.HeroName = hero.HeroName
+	ack.HeroSkills = hero.Skills
+	ack.HeroSkin = hero.Skin
+	ack.UserName = player.Name
+	ack.UserId = string(player.UserId)
 
 	database.DbUpsert(player)
 	return ack
 }
 
 func Handle_LogoutReq(objectId IdString, opCode MsgType, req *LogoutReq) interface{} {
-	player, ok := OnlineM.GetOnlinePlayer(objectId)
+	player, ok := OnlineM.GetOnePlayer(objectId)
 	if !ok {
 		return nil
 	}
@@ -43,13 +50,13 @@ func Handle_LogoutReq(objectId IdString, opCode MsgType, req *LogoutReq) interfa
 		player.room = nil
 	}
 
-	OnlineM.DelOnlinePlayer(objectId)
+	OnlineM.DelOnePlayer(objectId)
 	return nil
 }
 
 func Handle_SetPlayerNameReq(objectId IdString, opCode MsgType, req *SetPlayerNameReq) interface{} {
 	ack := &SetPlayerNameAck{}
-	player, ok := OnlineM.GetOnlinePlayer(objectId)
+	player, ok := OnlineM.GetOnePlayer(objectId)
 	if ok {
 		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
 		return ack

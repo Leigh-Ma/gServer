@@ -8,13 +8,11 @@ import (
 )
 
 type Player struct {
-	UserId   IdString
-	UUID     string
-	Name     string
-	HeroName string
-	Skin     string
-	Skills   []string
-	room     *Room
+	UserId IdString
+	UUID   string
+	Name   string
+	Hero
+	room *Room
 }
 
 func (p *Player) FillActiveDetail(sa *ActDetail) {

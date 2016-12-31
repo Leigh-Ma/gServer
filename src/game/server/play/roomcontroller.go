@@ -9,7 +9,7 @@ import (
 func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) interface{} {
 	ack := &LoginRoomAck{}
 
-	player, ok := OnlineM.GetOnlinePlayer(objectId)
+	player, ok := OnlineM.GetOnePlayer(objectId)
 	if !ok {
 		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
 		return ack
@@ -58,7 +58,7 @@ func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) i
 func Handle_LeaveRoomReq(objectId IdString, opCode MsgType, req *LeaveRoomReq) interface{} {
 	ack := &LeaveRoomAck{}
 
-	player, ok := OnlineM.GetOnlinePlayer(objectId)
+	player, ok := OnlineM.GetOnePlayer(objectId)
 	if !ok {
 		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
 		return ack
@@ -91,7 +91,7 @@ func Handle_LeaveRoomReq(objectId IdString, opCode MsgType, req *LeaveRoomReq) i
 
 func Handle_MoveActionReq(objectId IdString, opCode MsgType, req *MoveActionReq) interface{} {
 	ack := &MoveActionAck{}
-	player, ok := OnlineM.GetOnlinePlayer(objectId)
+	player, ok := OnlineM.GetOnePlayer(objectId)
 	if !ok {
 		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
 		return ack
@@ -126,7 +126,7 @@ func Handle_MoveActionReq(objectId IdString, opCode MsgType, req *MoveActionReq)
 
 func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) interface{} {
 	ack := &ChoseSideAck{}
-	player, ok := OnlineM.GetOnlinePlayer(objectId)
+	player, ok := OnlineM.GetOnePlayer(objectId)
 	if !ok {
 		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
 		return ack
@@ -154,7 +154,7 @@ func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) i
 
 func Handle_ChoseHeroReq(objectId IdString, opCode MsgType, req *ChoseHeroReq) interface{} {
 	ack := &ChoseHeroAck{}
-	player, ok := OnlineM.GetOnlinePlayer(objectId)
+	player, ok := OnlineM.GetOnePlayer(objectId)
 	if !ok {
 		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
 		return ack

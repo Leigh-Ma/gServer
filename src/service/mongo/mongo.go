@@ -31,6 +31,10 @@ func NewMongo(name, ip, port string) *mongoType {
 	return t
 }
 
+func (mt *mongoType) DbSession() *mgo.Session {
+	return mt.session
+}
+
 type Dirty interface {
 	CRUD(session *mgo.Session) bool
 	Inspect() string
