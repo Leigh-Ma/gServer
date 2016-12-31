@@ -78,6 +78,12 @@ type BrdCastGroupManage struct {
     lock  sync.Mutex
 }
 
+func NewBrdCastGroupManage() *BrdCastGroupManage{
+    return &BrdCastGroupManage{
+        groups: make(map[IdString]*BrdCastGroup, 0),
+    }
+}
+
 func (bm *BrdCastGroupManage) NewGroup(creator IdString) *BrdCastGroup {
     bm.lock.Lock()
     if grp, ok := bm.groups[creator]; ok {

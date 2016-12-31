@@ -12,6 +12,7 @@ func Handle_BrdCastAddMemberReq(objectId IdString, opCode MsgType, req *BrdCastG
 	grp, ok := FindBrdCastGroup(objectId, IdString(req.GroupId))
 	if !ok {
 		grp = NewBrdCastGroup4Server(objectId, IdString(req.GroupId))
+		allBrdCastGrp.AddGroup(grp)
 	}
 
 	ack.MemberNum = grp.AddBcgMembers(req.MemberIds...)
@@ -51,6 +52,7 @@ func Handle_BrdCastDestroyReq(objectId IdString, opCode MsgType, req *BrdCastGro
 		return ack
 	}
 
+	allBrdCastGrp.DestroyGroup(grp.Id)
 	ack.MemberNum = int32(len(grp.Members))
 	ack.Common = serverCommonAck(OK)
 
@@ -63,6 +65,7 @@ func Handle_BrdCastSyncReq(objectId IdString, opCode MsgType, req *BrdCastGroupM
 	grp, ok := FindBrdCastGroup(objectId, IdString(req.GroupId))
 	if !ok {
 		grp = NewBrdCastGroup4Server(objectId, IdString(req.GroupId))
+		allBrdCastGrp.AddGroup(grp)
 	}
 
 	ack.MemberNum = grp.ResetBcgMembers()

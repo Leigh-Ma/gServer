@@ -35,7 +35,7 @@ func RandomPlayerName() string {
 }
 
 var heroType = []string{
-	"CrazyMith", "CrazyDrot", "CrazyBrol", "CrazyTazun",
+	"swordman", "archer", "craftsman", "wizard",
 }
 
 var heroTypeNameSize = len(heroType)

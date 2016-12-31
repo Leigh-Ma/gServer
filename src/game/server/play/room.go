@@ -10,6 +10,7 @@ const (
 	screenSyncFrameRatio = 20
 )
 
+//room_id -> brdcastgroup.id
 type Room struct {
 	*BrdCastGroup
 	*Screen

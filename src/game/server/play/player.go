@@ -26,7 +26,7 @@ func (p *Player) FillActiveDetail(sa *ActDetail) {
 
 func (p *Player) Upsert(session *mgo.Session) bool {
 	c := session.Clone().DB(MONGO_DB_NAME).C(MONGO_COLLECTION_PLAYERS)
-	if _, err := c.Upsert(bson.M{"UserId": string(p.UserId)}, p); err != nil {
+	if _, err := c.Upsert(bson.M{"userid": string(p.UserId)}, p); err != nil {
 		logger.Error("Player Upsert error: %s", err.Error())
 		return false
 	}
@@ -35,7 +35,7 @@ func (p *Player) Upsert(session *mgo.Session) bool {
 
 func (p *Player) Destroy(session *mgo.Session) bool {
 	c := session.Clone().DB(MONGO_DB_NAME).C(MONGO_COLLECTION_PLAYERS)
-	if err := c.Remove(bson.M{"UserId": string(p.UserId)}); err != nil {
+	if err := c.Remove(bson.M{"userid": string(p.UserId)}); err != nil {
 		logger.Error("Player Destroy error: %s", err.Error())
 		return false
 	}

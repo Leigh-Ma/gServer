@@ -18,12 +18,14 @@ func Handle_LoginReq(objectId IdString, opCode MsgType, req *LoginReq) interface
 			UUID:   req.Uuid,
 		}
 		player.Hero = *NewHero()
+		AllPlayerM.AddOnePlayer(player)
 	}
 
 	hero := player.Hero
 	//query or create from db
 	OnlineM.AddOnePlayer(player)
 	ack.Common = getCommonAck(OK)
+	ack.HeroType = hero.HeroType
 	ack.HeroName = hero.HeroName
 	ack.HeroSkills = hero.Skills
 	ack.HeroSkin = hero.Skin
