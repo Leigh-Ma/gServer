@@ -32,6 +32,6 @@ func NewMongo(name, ip, port string) *mongoType {
 }
 
 type Dirty interface {
-	CRUD(interface{}) bool
+	CRUD(session *mgo.Session) bool
 	Inspect() string
 }

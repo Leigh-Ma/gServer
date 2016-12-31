@@ -2,7 +2,6 @@ package play
 
 import (
 	"library/database"
-	"library/idgen"
 	. "types"
 )
 
@@ -15,15 +14,16 @@ func Handle_LoginReq(objectId IdString, opCode MsgType, req *LoginReq) interface
 	}
 
 	player = &Player{
-		UserId: idgen.NewObjectID().ToIdString(),
+		UserId: objectId,
 		Name:   "sg_welcome",
 		UUID:   req.Uuid,
 	}
 
 	//query or create from db
 	OnlineM.AddOnlinePlayer(player)
+	ack.Common = getCommonAck(OK)
 
-	database.DbUpdate(player)
+	database.DbUpsert(player)
 	return ack
 }
 
@@ -66,6 +66,6 @@ func Handle_SetPlayerNameReq(objectId IdString, opCode MsgType, req *SetPlayerNa
 	}
 	ack.Common = getCommonAck(OK)
 
-	database.DbUpdate(player)
+	database.DbUpsert(player)
 	return ack
 }

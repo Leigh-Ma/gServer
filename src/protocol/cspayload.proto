@@ -23,6 +23,11 @@ message LoginReq{
 
 message LoginAck{
 	CommonAck common = 1;
+	string user_id = 2;
+	string user_name = 3;
+	string hero_name = 4;
+	string hero_skin = 5;
+	repeated string hero_skills = 6;
 }
 
 message LogoutReq{
@@ -39,6 +44,7 @@ message SetPlayerNameReq {
 
 message SetPlayerNameAck {
 	CommonAck common = 1;
+	string name = 2;
 }
 
 message ChoseSideReq {

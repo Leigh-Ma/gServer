@@ -14,6 +14,7 @@ import (
 	//"service/mongo"
 	"service/gatewayinner"
 	"service/gatewayoutter"
+	"service/mongo"
 	"service/timer"
 )
 
@@ -46,6 +47,9 @@ func main() {
 
 	timerSrv := timer.NewTimer("timer")
 	service.StartService(timerSrv, distributor.BUS)
+
+	mongoSrv := mongo.NewMongo("mongo", "127.0.0.1", "27017")
+	service.StartService(mongoSrv, distributor.BUS)
 
 	serverDealer := gatewayinner.NewGatewayInner(gatewayinner.ServiceName, "0.0.0.0", "9000")
 	service.StartService(serverDealer, distributor.BUS)

@@ -62,7 +62,7 @@ func (t *gatewayOutter) gatewayClient() {
 
 func (t *gatewayOutter) gatewayClientConn(connection *net.TCPConn) {
 	clientMeta := gm.NewClientMeta(connection)
-
+	logger.Info("new connntion established with client")
 	for clientMeta.Conn != nil {
 		head := make([]byte, NetMsgHeadNoIdSize)
 		_, err := io.ReadAtLeast(connection, head, NetMsgHeadNoIdSize)

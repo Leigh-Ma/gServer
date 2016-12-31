@@ -2,8 +2,8 @@ package play
 
 import (
 	"library/config"
-	. "types"
 	"library/database"
+	. "types"
 )
 
 func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) interface{} {
@@ -50,7 +50,7 @@ func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) i
 	ack.Screen = room.Screen.ToClient()
 	ack.Common = getCommonAck(OK)
 
-	database.DbUpdate(player)
+	database.DbUpsert(player)
 
 	return ack
 }

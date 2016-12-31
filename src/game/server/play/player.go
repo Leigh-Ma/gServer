@@ -9,8 +9,8 @@ import (
 
 type Player struct {
 	UserId   IdString
-	Name     string
 	UUID     string
+	Name     string
 	HeroName string
 	Skin     string
 	Skills   []string
@@ -26,19 +26,19 @@ func (p *Player) FillActiveDetail(sa *ActDetail) {
 	//sa.FullHp = p.FullHp
 }
 
-func (p *Player) UpSert(session *mgo.Session) bool {
-	c := session.Clone().DB(dbName).C(MONGO_COLLECTION_PLAYERS)
+func (p *Player) Upsert(session *mgo.Session) bool {
+	c := session.Clone().DB(MONGO_DB_NAME).C(MONGO_COLLECTION_PLAYERS)
 	if _, err := c.Upsert(bson.M{"UserId": string(p.UserId)}, p); err != nil {
-		logger.Error("Player UpSertDb error: %s", err.Error())
+		logger.Error("Player Upsert error: %s", err.Error())
 		return false
 	}
 	return true
 }
 
 func (p *Player) Destroy(session *mgo.Session) bool {
-	c := session.Clone().DB(dbName).C(MONGO_COLLECTION_PLAYERS)
+	c := session.Clone().DB(MONGO_DB_NAME).C(MONGO_COLLECTION_PLAYERS)
 	if err := c.Remove(bson.M{"UserId": string(p.UserId)}); err != nil {
-		logger.Error("Player UpSertDb error: %s", err.Error())
+		logger.Error("Player Destroy error: %s", err.Error())
 		return false
 	}
 	return true

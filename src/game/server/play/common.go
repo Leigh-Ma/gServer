@@ -2,16 +2,9 @@ package play
 
 import (
 	"game/server/support"
-	"library/config"
 	"library/frame"
 	. "types"
 )
-
-var dbName string
-
-func init() {
-	dbName, _ = config.Cfg.GetString("server_name")
-}
 
 var AsyncSender = new(support.AsyncSender)
 

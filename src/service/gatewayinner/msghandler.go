@@ -8,14 +8,23 @@ import (
 
 //client req message, forward to server with userId
 func GatewayOnClientMessage(clientMeta *gm.ConnMeta, msg *NetMsg) bool {
-	logger.Info("gateway: MSG <%16s> from player <%s> received", clientMeta.ID, msg.TypeString())
+	logger.Info("gateway: MSG <%16s> from player <%s> received", msg.TypeString(), clientMeta.ID)
 
 	serverMeta := clientMeta.ForwardMeta
 
 	code := msg.Code()
 	switch code {
 	case MT_LoginReq:
-		gm.Clients.Login(clientMeta, msg.Content)
+		ok := gm.Clients.Login(clientMeta, msg.Content)
+		if !ok {
+			logger.Error("gateway: player %s, login server error", clientMeta.ID)
+			return false
+		}
+		user, _ := gm.UserM.GetByUserId(clientMeta.ID)
+
+		req := &LoginReq{UserId: string(user.UserId), Uuid: user.Uuid, ServerId: string(user.ServerId)}
+		msg.SetPayLoad(MT_LoginReq, req, NetMsgIdFlagClient)
+
 		serverMeta = clientMeta.ForwardMeta
 	case MT_LogoutReq:
 		serverMeta = clientMeta.ForwardMeta
@@ -24,6 +33,7 @@ func GatewayOnClientMessage(clientMeta *gm.ConnMeta, msg *NetMsg) bool {
 
 	if serverMeta == nil {
 		logger.Error("gateway: player %s, server not distributed", clientMeta.ID)
+		return false
 	}
 
 	msg.ObjectID = clientMeta.ObjID

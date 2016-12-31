@@ -20,7 +20,7 @@ var operateTypeName = map[int8]string{
 }
 
 type IDbOperate interface {
-	UpSert(session *mgo.Session) bool
+	Upsert(session *mgo.Session) bool
 	Destroy(session *mgo.Session) bool
 }
 
@@ -32,7 +32,7 @@ type dbOperate struct {
 func (op *dbOperate) CRUD(session *mgo.Session) bool {
 	switch op.operate {
 	case dbOperateUpdate:
-		return op.object.UpSert(session)
+		return op.object.Upsert(session)
 	case dbOperateDelete:
 		return op.object.Destroy(session)
 	default:
@@ -50,10 +50,12 @@ func (op *dbOperate) Inspect() string {
 	return fmt.Sprintf("%s: %s", opName, structenh.Stringify(op.object))
 }
 
-func DbUpdate(dbObj IDbOperate) {
-	service.ServicePool.SendData(dm.NewDataMsg("", "mongo", 0, &dbOperate{object: dbObj, operate: dbOperateUpdate}))
+func DbUpsert(dbObj IDbOperate) {
+	msg := dm.NewDataMsg("", "mongo", 0, &dbOperate{object: dbObj, operate: dbOperateUpdate})
+	service.ServicePool.SendData(msg)
 }
 
 func DbDestroy(dbObj IDbOperate) {
-	service.ServicePool.SendData(dm.NewDataMsg("", "mongo", 0, &dbOperate{object: dbObj, operate: dbOperateDelete}))
+	msg := dm.NewDataMsg("", "mongo", 0, &dbOperate{object: dbObj, operate: dbOperateDelete})
+	service.ServicePool.SendData(msg)
 }

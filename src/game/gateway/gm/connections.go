@@ -89,31 +89,72 @@ func (mm *metaManage) Logout(meta *ConnMeta) {
 	meta.ForwardMeta = nil
 }
 
+func (mm *metaManage) userLogin(meta *ConnMeta, content []byte) bool {
+	var (
+		user *User
+		ok   bool
+	)
+
+	req := &LoginReq{}
+	if err := pb.Unmarshal(content, req); err != nil {
+		return false
+	}
+	if req.Uuid == "" {
+		logger.Warn("gateway: login request uuid is blank!!")
+		return false
+	}
+
+	if user, ok = UserM.GetByUserId(IdString(req.UserId)); user == nil {
+		user, ok = UserM.GetByUuid(req.Uuid)
+	}
+
+	if !ok {
+		user = UserM.CreateNewUser(req.Uuid)
+		logger.Info("gateway: client uuid %s not exist, create new: %v", req.Uuid, *user)
+	}
+
+	meta.ID = user.UserId
+	serverMeta, ok := Servers.GetMeta(IdString(req.ServerId))
+	if !ok || serverMeta.Conn == nil {
+		for _, meta := range Servers.connections {
+			serverMeta = meta
+			break
+		}
+		if serverMeta != nil {
+			logger.Info("client %s distribute to random server %s", meta.ID, req.ServerId)
+		} else {
+			logger.Info("no suitable server for client %s", meta.ID)
+			return false
+		}
+	}
+	meta.ForwardMeta = serverMeta
+	return true
+}
+
+func (mm *metaManage) serverLogin(meta *ConnMeta, content []byte) bool {
+	req := &ServerLoginReq{}
+	if err := pb.Unmarshal(content, req); err != nil {
+		return false
+	}
+	meta.ID = IdString(req.ServerId)
+	return true
+}
+
 func (mm *metaManage) Login(meta *ConnMeta, content []byte) bool {
-	if ok := mm.mineMeta(meta); !ok {
+	ok := mm.mineMeta(meta)
+	if !ok {
 		return false
 	}
 
 	switch meta.metaType {
 	case connMetaTypeClient:
-		req := &LoginReq{}
-		if err := pb.Unmarshal(content, req); err != nil {
-			return false
-		}
-		meta.ID = IdString(req.UserId)
-		serverMeta, ok := Servers.GetMeta(IdString(req.ServerId))
-		if !ok || serverMeta.Conn == nil {
-			logger.Error("client %s login server %s error, server not online", meta.ID, req.ServerId)
-			return false
-		}
-		meta.ForwardMeta = serverMeta
+		ok = mm.userLogin(meta, content)
 
 	case connMetaTypeServer:
-		req := &ServerLoginReq{}
-		if err := pb.Unmarshal(content, req); err != nil {
-			return false
-		}
-		meta.ID = IdString(req.ServerId)
+		ok = mm.serverLogin(meta, content)
+	}
+	if !ok {
+		return false
 	}
 
 	meta.ObjID = meta.ID.ToObjectID()
@@ -121,6 +162,7 @@ func (mm *metaManage) Login(meta *ConnMeta, content []byte) bool {
 	mm.lock.Lock()
 	mm.connections[meta.ID] = meta
 	mm.lock.Unlock()
+
 	return true
 }
 
