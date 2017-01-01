@@ -108,6 +108,7 @@ message LoginRoomReq {
 	string room_id = 1;
 	int32  pos_x   = 2;
 	int32  pos_y   = 3;
+	string side    = 4;
 }
 
 message LoginRoomAck {
