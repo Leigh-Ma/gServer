@@ -42,7 +42,7 @@ func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) i
 
 	player.room = room
 
-	if (isNewRoom) {
+	if isNewRoom {
 		room.BeginFrameSync()
 	} else {
 		bcgSync := &BrdCastGroupManageReq{
