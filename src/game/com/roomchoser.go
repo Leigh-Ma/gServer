@@ -5,5 +5,13 @@ import (
 )
 
 func ChoseARoom() (serverId, roomId IdString) {
-    return IdString("0x001"), IdString("0x001")
+    for s, m := range brdCastGroupsByServer {
+        serverId = s
+        for id := range m.groups {
+            roomId = id
+            break
+        }
+        break
+    }
+    return
 }

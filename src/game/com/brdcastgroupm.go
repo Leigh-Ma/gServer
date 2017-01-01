@@ -57,19 +57,13 @@ func NewBrdCastGroup4Server(serverId IdString, groupId IdString) (*BrdCastGroup)
     return grp
 }
 
-func AddBrdCastGroup4Server(serverId IdString, grp *BrdCastGroup) bool {
-    bm, ok := brdCastGroupsByServer[serverId]
+func NewBrdCastManager4Server(serverId IdString) bool {
+    _, ok := brdCastGroupsByServer[serverId]
     if !ok {
-        brdCastGroupsByServer[serverId] = &BrdCastGroupManage{
-            groups: make(map[IdString]*BrdCastGroup),
-        }
+        brdCastGroupsByServer[serverId] = NewBrdCastGroupManage()
     }
 
-    if  _, ok = bm.FindGroup(grp.Id); !ok {
-       bm.AddGroup(grp)
-    }
-
-    return false
+    return true
 }
 
 
