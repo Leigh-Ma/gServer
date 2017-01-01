@@ -65,7 +65,7 @@ func Handle_BrdCastSyncReq(objectId IdString, opCode MsgType, req *BrdCastGroupM
 		grp = NewBrdCastGroup4Server(objectId, IdString(req.GroupId))
 	}
 
-	ack.MemberNum = grp.ResetBcgMembers()
+	ack.MemberNum = grp.ResetBcgMembers(req.MemberIds...)
 	ack.Common = serverCommonAck(OK)
 
 	return ack

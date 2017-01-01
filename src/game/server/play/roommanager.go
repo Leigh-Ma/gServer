@@ -4,6 +4,7 @@ import (
 	"library/idgen"
 	"sync"
 	"types"
+	"game/com"
 )
 
 var RoomM = NewRoomManager()
@@ -42,15 +43,12 @@ func (rm *RoomManager) DestroyRoom(room *Room) {
 }
 
 func (rm *RoomManager) ChoseByTag(tag string) (room *Room) {
-	if room, ok := rm.Rooms[types.IdString(tag)]; ok && room.BcgMemberNum() < maxRoomMemberNum {
+	room, ok := rm.FindRoom(types.IdString(tag))
+	if ok && room.BcgMemberNum() < maxRoomMemberNum {
 		return room
 	}
 
-	for _, r := range rm.Rooms {
-		if r.BcgMemberNum() < maxRoomMemberNum {
-			room = r
-			break
-		}
-	}
-	return
+	_, roomId := com.ChoseARoom()
+	room, _ = rm.FindRoom(roomId)
+	return room
 }

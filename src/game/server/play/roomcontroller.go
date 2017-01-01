@@ -8,20 +8,18 @@ import (
 
 func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) interface{} {
 	ack := &LoginRoomAck{}
-
-	player, ok := AllPlayerM.GetPlayer(objectId)
+	isNewRoom := false
+	//FORCE reload player from database, player data maybe changed in other server
+	player, ok := AllPlayerM.LoadOneFromDb(database.MongoProxy, objectId)
 	if !ok {
-		player, ok = AllPlayerM.LoadOneFromDb(database.MongoProxy, objectId)
-		if !ok {
-			ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
-			return ack
-		}
+		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
+		return ack
 	}
 
 	room, ok := RoomM.FindRoom(IdString(req.RoomId))
 	if !ok {
 		room = RoomM.CreateRoom(player.Name)
-		room.BeginFrameSync()
+		isNewRoom = true
 	}
 
 	sa := room.GetExistActive(player.UserId)
@@ -29,7 +27,7 @@ func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) i
 		sa = &ScrActive{
 			Id:   player.UserId,
 			Type: screenObjTypePlayer,
-			Side: config.RoomSideMid,
+			Side: config.GetRoomSideNo(req.Side),
 		}
 	}
 
@@ -44,11 +42,15 @@ func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) i
 
 	player.room = room
 
-	bcgSync := &BrdCastGroupManageReq{
-		GroupId:   string(room.BrdCastGroup.Id),
-		MemberIds: []string{string(player.UserId)},
+	if (isNewRoom) {
+		room.BeginFrameSync()
+	} else {
+		bcgSync := &BrdCastGroupManageReq{
+			GroupId:   string(room.BrdCastGroup.Id),
+			MemberIds: []string{string(player.UserId)},
+		}
+		AsyncSender.SendServerNotify(MT_BrdCastAddMemberReq, bcgSync)
 	}
-	AsyncSender.SendServerNotify(MT_BrdCastAddMemberReq, bcgSync)
 
 	ack.Screen = room.Screen.ToClient()
 	ack.Common = getCommonAck(OK)
@@ -199,7 +201,9 @@ func Handle_ChoseHeroReq(objectId IdString, opCode MsgType, req *ChoseHeroReq) i
 
 func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq) interface{} {
 	ack := &SearchRoomAck{}
-	player, ok := AllPlayerM.GetPlayer(objectId)
+
+	//FORCE reload player from database, player data maybe changed in other server
+	player, ok := AllPlayerM.LoadOneFromDb(database.MongoProxy, objectId)
 	if !ok {
 		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
 		return ack
@@ -207,7 +211,7 @@ func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq)
 	room := RoomM.ChoseByTag(req.Tag)
 	if room == nil {
 		room = RoomM.CreateRoom(player.Name)
-		room.BeginFrameSync()
+		room.BeginFrameSync() //will create broadcast group on gateway
 	}
 
 	members, details := room.MembersInfo()

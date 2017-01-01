@@ -12,9 +12,9 @@ type BrdCastGroup struct {
     lock     sync.Mutex
 }
 
-func NewBrdCastGroup(creator IdString) *BrdCastGroup {
+func NewBrdCastGroup(id IdString) *BrdCastGroup {
     return &BrdCastGroup{
-        Id:      creator,
+        Id:      id,
         Members: make(map[IdString]int32, 0),
     }
 }

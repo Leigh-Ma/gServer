@@ -78,14 +78,14 @@ func NewBrdCastGroupManage() *BrdCastGroupManage{
     }
 }
 
-func (bm *BrdCastGroupManage) NewGroup(creator IdString) *BrdCastGroup {
+func (bm *BrdCastGroupManage) NewGroup(id IdString) *BrdCastGroup {
     bm.lock.Lock()
-    if grp, ok := bm.groups[creator]; ok {
+    if grp, ok := bm.groups[id]; ok {
         bm.lock.Unlock()
         return grp
     }
 
-    grp := NewBrdCastGroup(creator)
+    grp := NewBrdCastGroup(id)
     bm.groups[grp.Id] = grp
     bm.lock.Unlock()
 

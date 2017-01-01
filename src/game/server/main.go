@@ -52,7 +52,6 @@ func main() {
 
 	mongoSrv := mongo.NewMongo("mongo", "127.0.0.1", "27017")
 	service.StartService(mongoSrv, distributor.BUS)
-	play.AllPlayerM.LoadAllFrommDb(mongoSrv.DbSession())
 	database.SetMongoProxy(mongoSrv.DbSession())
 
 	protoDealer := serverhandle.NewServerHandle(serverhandle.ServiceName)

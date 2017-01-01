@@ -30,6 +30,8 @@ func NewRoom(id IdString, name string) *Room {
 
 func (r *Room) BeginFrameSync() {
 	go func() {
+		//create broadcast group on gateway first
+		AsyncSender.InstantSendServerNotify(MT_BrdCastSyncReq, r.BcgGroupDetail())
 		ticker := time.Tick(time.Microsecond * (1000 / screenSyncFrameRatio))
 		for {
 			select {

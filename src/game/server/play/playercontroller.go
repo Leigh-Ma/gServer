@@ -7,10 +7,8 @@ import (
 
 func Handle_LoginReq(objectId IdString, opCode MsgType, req *LoginReq) interface{} {
 	ack := &LoginAck{}
-	player, ok := AllPlayerM.GetPlayer(objectId)
-	if !ok {
-		player, ok = AllPlayerM.LoadOneFromDb(database.MongoProxy, objectId)
-	}
+	//FORCE reload player from database, player data maybe changed in other server
+	player, ok := AllPlayerM.LoadOneFromDb(database.MongoProxy, objectId)
 
 	if !ok {
 		player = &Player{
