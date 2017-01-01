@@ -59,3 +59,8 @@ new {
     code:   15, action: ChoseHeroReq, reaction: ChoseHeroAck,
     code:   16, action: ChoseHeroAck,
 }
+
+new {
+    code:   17, action: SearchRoomReq, reaction: SearchRoomAck,
+    code:   18, action: SearchRoomAck,
+}

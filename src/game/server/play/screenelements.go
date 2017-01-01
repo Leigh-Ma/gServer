@@ -148,6 +148,19 @@ func toClientActives(actives map[types.IdString]*ScrActive) []*types.ScreenActiv
 	return sas
 }
 
+func toClientPlayersActives(actives map[types.IdString]*ScrActive) []*types.ScreenActive {
+	if len(actives) == 0 {
+		return nil
+	}
+	sas := make([]*types.ScreenActive, 0)
+	for _, act := range actives {
+		if act.Type == screenObjTypePlayer {
+			sas = append(sas, act.ToClient())
+		}
+	}
+	return sas
+}
+
 func toClientActivesIds(actives map[types.IdString]*ScrActive) []string {
 	if len(actives) == 0 {
 		return nil
@@ -181,6 +194,20 @@ func toClientActivesDetails(actives map[types.IdString]*ScrActive) []*types.Acti
 	for _, act := range actives {
 		ads[idx] = act.Detail()
 		idx += 1
+	}
+
+	return ads
+}
+
+func toClientPlayerDetails(actives map[types.IdString]*ScrActive) []*types.ActiveDetail {
+	if len(actives) == 0 {
+		return nil
+	}
+	ads := make([]*types.ActiveDetail, 0)
+	for _, act := range actives {
+		if act.Type == screenObjTypePlayer {
+			ads = append(ads, act.Detail())
+		}
 	}
 
 	return ads

@@ -33,3 +33,7 @@ func Handle_MoveActionAck(objectId IdString, opCode MsgType, ack *MoveActionAck)
 func Handle_ChoseHeroAck(objectId IdString, opCode MsgType, ack *ChoseHeroAck) interface{} {
 	return nil
 }
+
+func Handle_SearchRoomAck(objectId IdString, opCode MsgType, ack *SearchRoomAck) interface{} {
+	return nil
+}

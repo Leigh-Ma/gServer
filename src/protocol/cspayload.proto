@@ -147,3 +147,16 @@ message ChoseHeroReq {
 message ChoseHeroAck {
 	CommonAck common = 1;
 }
+
+message SearchRoomReq{
+	string tag = 1;
+	string server_id = 2;
+}
+
+message SearchRoomAck{
+	CommonAck common = 1;
+	string  room_id = 2;
+	string room_name = 3;
+	repeated ScreenActive members = 4;
+	repeated ActiveDetail details = 5;
+}

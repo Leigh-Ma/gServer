@@ -10,30 +10,30 @@ func IsValidHeroSkill(skill string) bool {
 
 const (
 	RoomSideMid = 0
-	RoomSideOne = 1
-	RoomSideTwo = 2
+	RoomSideA   = 1
+	RoomSideB   = 2
 
 	RoomSideMidName = "mid"
-	RoomSideOneName = "1"
-	RoomSideTwoName = "2"
+	RoomSideAName   = "a"
+	RoomSideBName   = "b"
 )
 
 func GetRoomSideNo(side string) int8 {
 	switch side {
-	case "one":
-		return int8(RoomSideOne)
-	case "two":
-		return int8(RoomSideTwo)
+	case RoomSideAName:
+		return int8(RoomSideA)
+	case RoomSideBName:
+		return int8(RoomSideB)
 	}
 	return int8(RoomSideMid)
 }
 
 func GetRoomSideName(side int8) string {
 	switch side {
-	case RoomSideOne:
-		return RoomSideOneName
-	case RoomSideTwo:
-		return RoomSideTwoName
+	case RoomSideA:
+		return RoomSideAName
+	case RoomSideB:
+		return RoomSideBName
 	}
 	return RoomSideMidName
 }

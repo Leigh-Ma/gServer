@@ -108,3 +108,15 @@ func On_ChoseHeroAck(objectId IdString, opCode MsgType, payLoad []byte) interfac
 	pb.Unmarshal(payLoad, req)
 	return Handle_ChoseHeroAck(objectId, opCode, req)
 }
+
+func On_SearchRoomReq(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &SearchRoomReq{}
+	pb.Unmarshal(payLoad, req)
+	return Handle_SearchRoomReq(objectId, opCode, req)
+}
+
+func On_SearchRoomAck(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &SearchRoomAck{}
+	pb.Unmarshal(payLoad, req)
+	return Handle_SearchRoomAck(objectId, opCode, req)
+}

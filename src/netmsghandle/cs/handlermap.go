@@ -29,4 +29,6 @@ var NetMsgTypeHandler = map[MsgType]*NetMsgCb {
 	MT_MoveActionAck :&NetMsgCb{MT_MoveActionAck, MT_Blank        , On_MoveActionAck, ""},
 	MT_ChoseHeroReq  :&NetMsgCb{MT_ChoseHeroReq , MT_ChoseHeroAck , On_ChoseHeroReq , ""},
 	MT_ChoseHeroAck  :&NetMsgCb{MT_ChoseHeroAck , MT_Blank        , On_ChoseHeroAck , ""},
+	MT_SearchRoomReq :&NetMsgCb{MT_SearchRoomReq, MT_SearchRoomAck, On_SearchRoomReq, ""},
+	MT_SearchRoomAck :&NetMsgCb{MT_SearchRoomAck, MT_Blank        , On_SearchRoomAck, ""},
 }

@@ -20,6 +20,8 @@ const (
     MT_MoveActionAck     =  MsgType( 14)
     MT_ChoseHeroReq      =  MsgType( 15)
     MT_ChoseHeroAck      =  MsgType( 16)
+    MT_SearchRoomReq     =  MsgType( 17)
+    MT_SearchRoomAck     =  MsgType( 18)
 )
 
 var csmsgtypesNames = map[MsgType]string {
@@ -41,4 +43,6 @@ var csmsgtypesNames = map[MsgType]string {
     MT_MoveActionAck    :  "MT_MoveActionAck",
     MT_ChoseHeroReq     :  "MT_ChoseHeroReq",
     MT_ChoseHeroAck     :  "MT_ChoseHeroAck",
+    MT_SearchRoomReq    :  "MT_SearchRoomReq",
+    MT_SearchRoomAck    :  "MT_SearchRoomAck",
 }

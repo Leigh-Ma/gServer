@@ -39,3 +39,13 @@ func (rm *RoomManager) DestroyRoom(room *Room) {
 	rm.Unlock()
 	room.Destroy()
 }
+
+func (rm *RoomManager) ChoseByTag(tag string) (room *Room) {
+	for _, r := range rm.Rooms {
+		if r.BcgMemberNum() < maxRoomMemberNum {
+			room = r
+			break
+		}
+	}
+	return
+}

@@ -1,8 +1,8 @@
 package gm
 
 import (
-	"game/com"
 	"library/frame"
+	"library/logger"
 	. "types"
 )
 
@@ -12,9 +12,24 @@ func serverCommonAck(code int32) *ServerCommonAck {
 	return &ServerCommonAck{ErrCode: code}
 }
 
-//equal to room, by id
-var allBrdCastGrp = com.NewBrdCastGroupManage()
+//todo chose according to room information
+func choseServerToLogin(client *ConnMeta, user *User) bool {
+	serverMeta, ok := Servers.GetMeta(user.ServerId)
+	if !ok || serverMeta.Conn == nil {
+		for _, meta := range Servers.connections {
+			serverMeta = meta
+			break
+		}
+	}
 
-func RandRoomForUser(user *User) (svrId, roomId IdString) {
-	return IdString("0x001"), IdString("0x002")
+	if serverMeta == nil {
+		logger.Info("no suitable server for client %s", client.ID)
+		return false
+	}
+
+	logger.Info("client %s distribute to server %s", client.ID, serverMeta.ID)
+	client.ForwardMeta = serverMeta
+	user.ServerId = serverMeta.ID
+
+	return true
 }

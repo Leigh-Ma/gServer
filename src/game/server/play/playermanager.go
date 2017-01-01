@@ -2,12 +2,12 @@ package play
 
 import (
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	"library/logger"
 	"sync"
 	. "types"
 )
 
-var OnlineM = NewPlayersManager()
 var AllPlayerM = NewPlayersManager()
 
 type PlayerManager struct {
@@ -21,20 +21,20 @@ func NewPlayersManager() *PlayerManager {
 	}
 }
 
-func (pm *PlayerManager) GetOnePlayer(userId IdString) (*Player, bool) {
+func (pm *PlayerManager) GetPlayer(userId IdString) (*Player, bool) {
 	pm.Lock()
 	p, ok := pm.Players[userId]
 	pm.Unlock()
 	return p, ok
 }
 
-func (pm *PlayerManager) AddOnePlayer(p *Player) {
+func (pm *PlayerManager) AddPlayer(p *Player) {
 	pm.Lock()
 	pm.Players[p.UserId] = p
 	pm.Unlock()
 }
 
-func (pm *PlayerManager) DelOnePlayer(userId IdString) {
+func (pm *PlayerManager) DelPlayer(userId IdString) {
 	pm.Lock()
 	delete(pm.Players, userId)
 	pm.Unlock()
@@ -77,4 +77,26 @@ func (pm *PlayerManager) LoadAllFrommDb(session *mgo.Session) bool {
 
 	logger.Info("Load %d Players From DataBase", total)
 	return true
+}
+
+func (pm *PlayerManager) LoadOneFromDb(session *mgo.Session, userId IdString) (*Player, bool) {
+	if session == nil {
+		return nil, false
+	}
+
+	var player *Player
+	c := session.Clone().DB(MONGO_DB_NAME).C(MONGO_COLLECTION_PLAYERS)
+	err := c.Find(bson.M{"userid": userId}).One(&player)
+	if err != nil {
+		logger.Info("Load Player %s From DataBase error: %s", userId, err.Error())
+		return nil, false
+	}
+
+	if player == nil {
+		return nil, false
+	}
+
+	pm.AddPlayer(player)
+
+	return player, true
 }

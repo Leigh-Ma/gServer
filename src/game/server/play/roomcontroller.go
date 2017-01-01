@@ -9,10 +9,13 @@ import (
 func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) interface{} {
 	ack := &LoginRoomAck{}
 
-	player, ok := OnlineM.GetOnePlayer(objectId)
+	player, ok := AllPlayerM.GetPlayer(objectId)
 	if !ok {
-		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
-		return ack
+		player, ok = AllPlayerM.LoadOneFromDb(database.MongoProxy, objectId)
+		if !ok {
+			ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
+			return ack
+		}
 	}
 
 	room, ok := RoomM.FindRoom(IdString(req.RoomId))
@@ -58,7 +61,7 @@ func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) i
 func Handle_LeaveRoomReq(objectId IdString, opCode MsgType, req *LeaveRoomReq) interface{} {
 	ack := &LeaveRoomAck{}
 
-	player, ok := OnlineM.GetOnePlayer(objectId)
+	player, ok := AllPlayerM.GetPlayer(objectId)
 	if !ok {
 		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
 		return ack
@@ -91,7 +94,7 @@ func Handle_LeaveRoomReq(objectId IdString, opCode MsgType, req *LeaveRoomReq) i
 
 func Handle_MoveActionReq(objectId IdString, opCode MsgType, req *MoveActionReq) interface{} {
 	ack := &MoveActionAck{}
-	player, ok := OnlineM.GetOnePlayer(objectId)
+	player, ok := AllPlayerM.GetPlayer(objectId)
 	if !ok {
 		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
 		return ack
@@ -126,7 +129,7 @@ func Handle_MoveActionReq(objectId IdString, opCode MsgType, req *MoveActionReq)
 
 func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) interface{} {
 	ack := &ChoseSideAck{}
-	player, ok := OnlineM.GetOnePlayer(objectId)
+	player, ok := AllPlayerM.GetPlayer(objectId)
 	if !ok {
 		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
 		return ack
@@ -154,7 +157,7 @@ func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) i
 
 func Handle_ChoseHeroReq(objectId IdString, opCode MsgType, req *ChoseHeroReq) interface{} {
 	ack := &ChoseHeroAck{}
-	player, ok := OnlineM.GetOnePlayer(objectId)
+	player, ok := AllPlayerM.GetPlayer(objectId)
 	if !ok {
 		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
 		return ack
@@ -189,6 +192,30 @@ func Handle_ChoseHeroReq(objectId IdString, opCode MsgType, req *ChoseHeroReq) i
 		}
 	}
 
+	ack.Common = getCommonAck(OK)
+
+	return ack
+}
+
+func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq) interface{} {
+	ack := &SearchRoomAck{}
+	player, ok := AllPlayerM.GetPlayer(objectId)
+	if !ok {
+		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
+		return ack
+	}
+	room := RoomM.ChoseByTag(req.Tag)
+	if room == nil {
+		room = RoomM.CreateRoom(player.UserId, player.Name)
+		room.BeginFrameSync()
+	}
+
+	members, details := room.MembersInfo()
+
+	ack.RoomId = string(room.Id)
+	ack.RoomName = room.Name
+	ack.Members = members
+	ack.Details = details
 	ack.Common = getCommonAck(OK)
 
 	return ack

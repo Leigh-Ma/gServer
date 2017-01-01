@@ -8,6 +8,7 @@ import (
 
 const (
 	screenSyncFrameRatio = 20
+	maxRoomMemberNum     = 8
 )
 
 //room_id -> brdcastgroup.id
@@ -45,4 +46,10 @@ func (r *Room) BeginFrameSync() {
 
 func (r *Room) Destroy() {
 	r.stop <- 1
+}
+
+func (r *Room) MembersInfo() ([]*ScreenActive, []*ActiveDetail) {
+	sa := toClientPlayersActives(r.Actives)
+	ad := toClientPlayerDetails(r.Actives)
+	return sa, ad
 }

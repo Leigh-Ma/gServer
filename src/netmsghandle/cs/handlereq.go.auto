@@ -37,3 +37,7 @@ func Handle_MoveActionReq(objectId IdString, opCode MsgType, req *MoveActionReq)
 func Handle_ChoseHeroReq(objectId IdString, opCode MsgType, req *ChoseHeroReq) interface{} {
 	return nil
 }
+
+func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq) interface{} {
+	return nil
+}

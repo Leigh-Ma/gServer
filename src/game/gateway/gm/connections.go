@@ -99,6 +99,7 @@ func (mm *metaManage) userLogin(meta *ConnMeta, content []byte) bool {
 	if err := pb.Unmarshal(content, req); err != nil {
 		return false
 	}
+
 	if req.Uuid == "" {
 		logger.Warn("gateway: login request uuid is blank!!")
 		return false
@@ -114,21 +115,9 @@ func (mm *metaManage) userLogin(meta *ConnMeta, content []byte) bool {
 	}
 
 	meta.ID = user.UserId
-	serverMeta, ok := Servers.GetMeta(IdString(req.ServerId))
-	if !ok || serverMeta.Conn == nil {
-		for _, meta := range Servers.connections {
-			serverMeta = meta
-			break
-		}
-		if serverMeta != nil {
-			logger.Info("client %s distribute to random server %s", meta.ID, req.ServerId)
-		} else {
-			logger.Info("no suitable server for client %s", meta.ID)
-			return false
-		}
-	}
-	meta.ForwardMeta = serverMeta
-	return true
+	user.ServerId = IdString(req.ServerId)
+
+	return choseServerToLogin(meta, user)
 }
 
 func (mm *metaManage) serverLogin(meta *ConnMeta, content []byte) bool {
