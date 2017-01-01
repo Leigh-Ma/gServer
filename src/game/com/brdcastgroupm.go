@@ -10,9 +10,10 @@ var brdCastGroupsByServer = make(map[IdString]*BrdCastGroupManage, 0)
 func FindBrdCastGroup(serverId IdString, groupId IdString) (*BrdCastGroup, bool) {
     bm, ok := brdCastGroupsByServer[serverId]
     if !ok {
-        brdCastGroupsByServer[serverId] = &BrdCastGroupManage{
+        bm = &BrdCastGroupManage{
             groups: make(map[IdString]*BrdCastGroup),
         }
+        brdCastGroupsByServer[serverId] = bm
         return nil, false
     }
 
@@ -44,9 +45,10 @@ func DestroyBrdCastGroup(serverId IdString, groupId IdString) (*BrdCastGroup, bo
 func NewBrdCastGroup4Server(serverId IdString, groupId IdString) (*BrdCastGroup) {
     bm, ok := brdCastGroupsByServer[serverId]
     if !ok {
-        brdCastGroupsByServer[serverId] = &BrdCastGroupManage{
+        bm = &BrdCastGroupManage{
             groups: make(map[IdString]*BrdCastGroup),
         }
+        brdCastGroupsByServer[serverId] = bm
     }
 
     grp, ok := bm.FindGroup(groupId)
