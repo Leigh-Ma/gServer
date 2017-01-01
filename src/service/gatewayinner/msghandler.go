@@ -29,6 +29,14 @@ func GatewayOnClientMessage(clientMeta *gm.ConnMeta, msg *NetMsg) bool {
 	case MT_LogoutReq:
 		serverMeta = clientMeta.ForwardMeta
 		gm.Clients.Logout(clientMeta)
+	case MT_SearchRoomReq:
+		roomId, ok := gm.Clients.SearchRoomServer(clientMeta, msg.Content)
+		user, _ := gm.UserM.GetByUserId(clientMeta.ID)
+		if ok {
+			req := &SearchRoomReq{Tag: string(roomId), ServerId: string(user.ServerId)}
+			msg.SetPayLoad(MT_LoginReq, req, NetMsgIdFlagClient)
+		}
+		serverMeta = clientMeta.ForwardMeta
 	}
 
 	if serverMeta == nil {

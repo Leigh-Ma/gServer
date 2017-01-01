@@ -20,7 +20,7 @@ func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) i
 
 	room, ok := RoomM.FindRoom(IdString(req.RoomId))
 	if !ok {
-		room = RoomM.CreateRoom(player.UserId, player.Name)
+		room = RoomM.CreateRoom(player.Name)
 		room.BeginFrameSync()
 	}
 
@@ -206,7 +206,7 @@ func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq)
 	}
 	room := RoomM.ChoseByTag(req.Tag)
 	if room == nil {
-		room = RoomM.CreateRoom(player.UserId, player.Name)
+		room = RoomM.CreateRoom(player.Name)
 		room.BeginFrameSync()
 	}
 

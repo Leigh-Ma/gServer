@@ -117,7 +117,9 @@ func (mm *metaManage) userLogin(meta *ConnMeta, content []byte) bool {
 	meta.ID = user.UserId
 	user.ServerId = IdString(req.ServerId)
 
-	return choseServerToLogin(meta, user)
+	_, ok = choseServerToLogin(meta, user)
+
+	return ok
 }
 
 func (mm *metaManage) serverLogin(meta *ConnMeta, content []byte) bool {
@@ -153,6 +155,30 @@ func (mm *metaManage) Login(meta *ConnMeta, content []byte) bool {
 	mm.lock.Unlock()
 
 	return true
+}
+
+func (mm *metaManage) SearchRoomServer(meta *ConnMeta, content []byte) (IdString, bool) {
+	roomId := InvalidIdString
+	ok := mm.mineMeta(meta)
+	if !ok {
+		return roomId, false
+	}
+
+	req := &SearchRoomReq{}
+	if err := pb.Unmarshal(content, req); err != nil {
+		return roomId, false
+	}
+
+	user, ok := UserM.GetByUserId(meta.ID)
+	if !ok {
+		return roomId, false
+	}
+	user.ServerId = IdString(req.ServerId)
+
+	//re-login to other server
+	roomId, ok = choseServerToLogin(meta, user)
+
+	return roomId, ok
 }
 
 func (meta *ConnMeta) Send(b []byte) (int, error) {

@@ -1,6 +1,7 @@
 package play
 
 import (
+	"library/idgen"
 	"sync"
 	"types"
 )
@@ -25,8 +26,8 @@ func (rm *RoomManager) FindRoom(roomId types.IdString) (*Room, bool) {
 	return room, ok
 }
 
-func (rm *RoomManager) CreateRoom(id types.IdString, name string) *Room {
-	room := NewRoom(id, name)
+func (rm *RoomManager) CreateRoom(name string) *Room {
+	room := NewRoom(idgen.NewObjectID().ToIdString(), name)
 	rm.Lock()
 	rm.Rooms[room.Id] = room
 	rm.Unlock()
@@ -41,6 +42,10 @@ func (rm *RoomManager) DestroyRoom(room *Room) {
 }
 
 func (rm *RoomManager) ChoseByTag(tag string) (room *Room) {
+	if room, ok := rm.Rooms[types.IdString(tag)]; ok && room.BcgMemberNum() < maxRoomMemberNum {
+		return room
+	}
+
 	for _, r := range rm.Rooms {
 		if r.BcgMemberNum() < maxRoomMemberNum {
 			room = r

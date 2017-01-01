@@ -20,9 +20,9 @@ type Room struct {
 	stop chan int
 }
 
-func NewRoom(creatorId IdString, name string) *Room {
+func NewRoom(id IdString, name string) *Room {
 	r := &Room{Name: name}
-	r.BrdCastGroup = NewBrdCastGroup4Server(getMyServerId(), creatorId)
+	r.BrdCastGroup = NewBrdCastGroup4Server(getMyServerId(), id)
 	r.Screen = NewScreen()
 
 	return r

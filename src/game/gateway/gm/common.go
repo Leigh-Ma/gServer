@@ -1,6 +1,7 @@
 package gm
 
 import (
+	"game/com"
 	"library/frame"
 	"library/logger"
 	. "types"
@@ -12,24 +13,27 @@ func serverCommonAck(code int32) *ServerCommonAck {
 	return &ServerCommonAck{ErrCode: code}
 }
 
-//todo chose according to room information
-func choseServerToLogin(client *ConnMeta, user *User) bool {
+func choseServerToLogin(client *ConnMeta, user *User) (IdString, bool) {
+	roomId, serverId := InvalidIdString, InvalidIdString
+	serverMeta := client.ForwardMeta
+	if serverMeta != nil && user.ServerId == serverMeta.ID && user.ServerId.IsValid() {
+		return roomId, true
+	}
+
 	serverMeta, ok := Servers.GetMeta(user.ServerId)
 	if !ok || serverMeta.Conn == nil {
-		for _, meta := range Servers.connections {
-			serverMeta = meta
-			break
-		}
+		serverId, roomId = com.ChoseARoom()
+		serverMeta, _ = Servers.GetMeta(serverId)
 	}
 
 	if serverMeta == nil {
 		logger.Info("no suitable server for client %s", client.ID)
-		return false
+		return roomId, false
 	}
 
 	logger.Info("client %s distribute to server %s", client.ID, serverMeta.ID)
 	client.ForwardMeta = serverMeta
 	user.ServerId = serverMeta.ID
 
-	return true
+	return roomId, true
 }

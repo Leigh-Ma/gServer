@@ -13,6 +13,10 @@ const (
 	DataMsgFlagAsync     = 5
 )
 
+const (
+	InvalidIdString = IdString("0x0")
+)
+
 //unix timestamp
 type UnixTS int64
 
@@ -30,4 +34,9 @@ func (id IdString) ToObjectID() ObjectID {
 		fmt.Printf("prase idstring %s to object id error: %s\n", id, err.Error())
 	}
 	return ObjectID(value)
+}
+
+func (id IdString) IsValid() bool {
+	_, err := strconv.ParseUint(string(id), 0, 64)
+	return err == nil
 }
