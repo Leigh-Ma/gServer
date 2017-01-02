@@ -5,6 +5,7 @@ import (
 	"game/gateway/gm"
 	pb "github.com/golang/protobuf/proto"
 	"library/logger"
+	"library/structenh"
 	"netmsghandle/gs"
 	. "types"
 )
@@ -39,19 +40,19 @@ func handleServer2GatewayMessage(serverMeta *gm.ConnMeta, msg *NetMsg) bool {
 	}
 
 	if msg.ObjectID != serverMeta.ID.ToObjectID() {
-		logger.Warn("gs: MSG <%16s>: meta server_id %s != %s in message head", opName, serverMeta.ID, msg.ToIdString())
+		logger.Error("gs: MSG <%16s>: meta server_id %s != %s in message head", opName, serverMeta.ID, msg.ToIdString())
 		return false
 	}
 
 	handler, ok := gs.NetMsgTypeHandler[msg.Code()]
 	if !ok {
-		logger.Warn("gs: MSG <%16s>: server %s, handler not exist", opName, msg.ToIdString())
+		logger.Error("gs: MSG <%16s>: server %s, handler not exist", opName, msg.ToIdString())
 		return false
 	}
 
 	ack := handler.Handler(msg.ToIdString(), msg.Code(), msg.Content)
 	if ack == nil {
-		logger.Info("gs: MSG <%16s>: ACK <%16s> nil, ", opName, handler.RetCode.TypeString())
+		logger.Report("gs: MSG <%16s>: ACK <%16s> nil, ", opName, handler.RetCode.TypeString())
 		return true
 	}
 
@@ -69,6 +70,7 @@ func handleServer2GatewayMessage(serverMeta *gm.ConnMeta, msg *NetMsg) bool {
 		return false
 	}
 
+	logger.Payload("rx-r: %4d: payload %s", handler.RetCode, structenh.StringifyStruct(ack))
 	return serverMeta.GsToServer(opName, msg.TypeString(), bin)
 }
 

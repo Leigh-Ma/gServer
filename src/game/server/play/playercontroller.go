@@ -2,6 +2,7 @@ package play
 
 import (
 	"library/database"
+	"library/logger"
 	. "types"
 )
 
@@ -39,6 +40,7 @@ func Handle_LogoutReq(objectId IdString, opCode MsgType, req *LogoutReq) interfa
 	if !ok {
 		return nil
 	}
+	logger.Info("player %s logout, room %v", objectId, player.room)
 
 	if player.room != nil {
 		player.room.DelBcgMember(player.UserId)
@@ -46,7 +48,7 @@ func Handle_LogoutReq(objectId IdString, opCode MsgType, req *LogoutReq) interfa
 			GroupId:   string(player.room.BrdCastGroup.Id),
 			MemberIds: []string{string(player.UserId)},
 		}
-		AsyncSender.SendServerNotify(MT_BrdCastDelMemberReq, bcgSync)
+		AsyncSender.InstantSendServerNotify(MT_BrdCastDelMemberReq, bcgSync)
 		player.room = nil
 	}
 

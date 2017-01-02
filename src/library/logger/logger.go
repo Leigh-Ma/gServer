@@ -66,6 +66,14 @@ func EnableDebugLog(s bool) {
 	debugSwitch = s
 }
 
+func Payload(format string, args ...interface{}) {
+	l.Printf(info+format, args...)
+}
+
+func Report(format string, args ...interface{}) {
+	//l.Printf(info+format, args...)
+}
+
 func PProf() string {
 	profile := pprof.Lookup("goroutine")
 	msg := fmt.Sprintf("%d goroutine(s) are currently in proccess, detail...", runtime.NumGoroutine())

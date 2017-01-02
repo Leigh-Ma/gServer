@@ -215,7 +215,7 @@ func (meta *ConnMeta) CsToClient(opName string, content []byte) bool {
 		return false
 	}
 
-	logger.Info("cs: MSG <%16s>: forwad to player %s sucess ", opName, meta.ID)
+	logger.Info("cs: MSG <%16s>: forward to player %s sucess ", opName, meta.ID)
 
 	return true
 }
@@ -228,7 +228,7 @@ func (meta *ConnMeta) GsToServer(opName, ackName string, content []byte) bool {
 		return false
 	}
 
-	logger.Info("gs: MSG <%16s>: server %s, ACK <%16s> send sucess", opName, meta.ID, ackName)
+	logger.Report("gs: MSG <%16s>: server %s, ACK <%16s> send sucess", opName, meta.ID, ackName)
 
 	return true
 }

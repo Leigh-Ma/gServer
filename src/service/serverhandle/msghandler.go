@@ -5,6 +5,7 @@ import (
 	"game/server/play"
 	pb "github.com/golang/protobuf/proto"
 	"library/logger"
+	"library/structenh"
 	"netmsghandle/cs"
 	"netmsghandle/gs"
 	. "types"
@@ -32,7 +33,7 @@ func HandleMessageFromGateway(payload *NetMsg) (interface{}, bool) {
 	}
 
 	if ack == nil {
-		logger.Info("ACK for MSG %s is nil, ID %s", opName, payload.ToIdString())
+		logger.Report("ACK for MSG %s is nil, ID %s", opName, payload.ToIdString())
 		return nil, true
 	}
 
@@ -44,7 +45,7 @@ func HandleMessageFromGateway(payload *NetMsg) (interface{}, bool) {
 
 	payload.SetPayLoad(ackCode, pbAck, msgFlag)
 
-	logger.Info("ACK for MSG %16s: ID %s, ack code %16s", opName, payload.ToIdString(), payload.TypeString())
+	logger.Report("ACK for MSG %16s: ID %s, ack code %16s", opName, payload.ToIdString(), payload.TypeString())
 	return ack, true
 }
 
@@ -59,7 +60,7 @@ func playHandler(payload *NetMsg) (interface{}, MsgType) {
 	}
 
 	ack := handler.Handler(payload.ToIdString(), payload.Code(), payload.Content)
-
+	logger.Payload("rx-x: %4d: payload %s", handler.RetCode, structenh.StringifyStruct(ack))
 	return ack, handler.RetCode
 }
 
@@ -74,6 +75,6 @@ func serverHandler(payload *NetMsg) (interface{}, MsgType) {
 	}
 
 	ack := handler.Handler(payload.ToIdString(), payload.Code(), payload.Content)
-
+	logger.Payload("rx-x: %4d: payload %s", handler.RetCode, structenh.StringifyStruct(ack))
 	return ack, handler.RetCode
 }

@@ -77,6 +77,7 @@ printFunctionOn='function printACode(codeDesc){
 
             printf("\nfunc On_%s(objectId IdString, opCode MsgType, payLoad []byte) interface{} {\n",action);
             printf("\treq := &%s{}\n\tpb.Unmarshal(payLoad, req)\n", payload);
+                  printf("\tlogger.Payload(\"%s\", opCode, structenh.StringifyStruct(req))\n", "rx-r: %4d: payload %s");
             printf("\treturn Handle_%s(objectId, opCode, req)\n}\n", action);
             delete codeDesc
         }'
@@ -168,6 +169,8 @@ package ${PACKAGE}
 import (
 	pb "github.com/golang/protobuf/proto"
 	. "types"
+	"library/logger"
+	"library/structenh"
 EOF
     cat ${PROTO_FILE} | grep "gamedealer" | awk -F= '{split($2, ps, " "); for(idx in ps) printf("    . \"%s\"\n"), ps[idx]}'| tee -a ${OUTPUT_FILE}
     echo ")" | tee -a ${OUTPUT_FILE}

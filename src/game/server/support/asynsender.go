@@ -3,6 +3,8 @@ package support
 import (
 	pb "github.com/golang/protobuf/proto"
 	"library/core/datamsg"
+	"library/logger"
+	"library/structenh"
 	"net"
 	"service"
 	"sync"
@@ -73,7 +75,7 @@ func (s *AsyncSender) instantSend(code MsgType, flag uint32, payload pb.Message,
 	msg := datamsg.NewDataMsg("", "", DataMsgFlagS2G, nil)
 	msg.Payload = sp
 	msg.SetMeta(s.serverName, s.serverCoon)
-
+	logger.Payload("rx-r: %4d: payload %s", code, structenh.StringifyStruct(payload))
 	s.msgPool.Append(msg)
 }
 

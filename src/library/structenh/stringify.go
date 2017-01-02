@@ -8,11 +8,40 @@ import (
 )
 
 func Stringify(record interface{}) string {
+	if record == nil {
+		return "nil"
+	}
 	return asString(record, true)
 }
 
 func StringifyValue(record interface{}) string {
+	if record == nil {
+		return "nil"
+	}
 	return asString(record, false)
+}
+
+func StringifyStruct(record interface{}) string {
+	if record == nil {
+		return "nil"
+	}
+	return prefix(record) + asString(record, false)
+}
+
+func prefix(record interface{}) string {
+	t := reflect.TypeOf(record)
+	//s += fmt.Sprintf("(%s)", t.Kind().String())
+	switch t.Kind() {
+	case reflect.Ptr:
+		if t.Elem().Kind() != reflect.Struct {
+			return ""
+		}
+		t = t.Elem()
+		fallthrough
+	case reflect.Struct:
+		return t.Name()
+	}
+	return ""
 }
 
 func asString(record interface{}, withAddress bool) string {
