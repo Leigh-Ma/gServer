@@ -70,7 +70,7 @@ func handleServer2GatewayMessage(serverMeta *gm.ConnMeta, msg *NetMsg) bool {
 		return false
 	}
 
-	logger.Payload("rx-r: %4d: payload %s", handler.RetCode, structenh.StringifyStruct(ack))
+	logger.Payload("rx-x: %4d: payload %s", handler.RetCode, structenh.StringifyStruct(ack))
 	return serverMeta.GsToServer(opName, msg.TypeString(), bin)
 }
 
