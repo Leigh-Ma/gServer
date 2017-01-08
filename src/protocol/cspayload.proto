@@ -165,8 +165,8 @@ message SearchRoomReq{
 
 message SearchRoomAck{
 	CommonAck common = 1;
-	string  room_id = 2;
+	string room_id = 2;
 	string room_name = 3;
-	repeated ScreenActive members = 4;
-	repeated ActiveDetail details = 5;
+	repeated HeroInfo Blue = 4;
+	repeated HeroInfo Red  = 5;
 }
