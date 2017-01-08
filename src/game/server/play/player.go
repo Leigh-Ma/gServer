@@ -20,8 +20,10 @@ func (p *Player) FillActiveDetail(sa *ActDetail) {
 	sa.SubType = p.HeroName
 	sa.Skin = p.Skin
 
-	//sa.Hp = p.Hp
-	//sa.FullHp = p.FullHp
+	sa.Hp = p.Hp
+	sa.FullHp = p.FullHp
+	sa.Skills = make([]string, len(p.Skills))
+	copy(sa.Skills, p.Skills)
 }
 
 func (p *Player) Upsert(session *mgo.Session) bool {

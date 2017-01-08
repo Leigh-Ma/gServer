@@ -21,14 +21,20 @@ message LoginReq{
 	string server_id = 3;
 }
 
+message HeroInfo{
+	string HeroName = 1;
+	string HeroType = 2;
+	string Skin     = 3;
+	repeated string Skills = 4;
+	int32 Hp = 5;
+	int32 FullHp = 6;
+}
+
 message LoginAck{
 	CommonAck common = 1;
 	string user_id = 2;
 	string user_name = 3;
-	string hero_type = 4;
-	string hero_name = 5;
-	string hero_skin = 6;
-	repeated string hero_skills = 7;
+	HeroInfo hero = 4;
 }
 
 message LogoutReq{
@@ -54,6 +60,7 @@ message ChoseSideReq {
 
 message ChoseSideAck {
 	CommonAck common = 1;
+	string Side = 2;
 }
 
 message ScreenActive {
@@ -140,13 +147,15 @@ message MoveActionAck {
 }
 
 message ChoseHeroReq {
-	string   hero_name = 1;
+	string   hero_type = 1;
 	string   hero_skin = 2;
 	repeated string hero_skills = 3;
+	bool     resetHp = 4;
 }
 
 message ChoseHeroAck {
 	CommonAck common = 1;
+	HeroInfo hero = 2;
 }
 
 message SearchRoomReq{

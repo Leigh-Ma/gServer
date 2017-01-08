@@ -6,6 +6,33 @@ import (
 	. "types"
 )
 
+func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq) interface{} {
+	ack := &SearchRoomAck{}
+
+	//FORCE reload player from database, player data maybe changed in other server
+	player, ok := AllPlayerM.LoadOneFromDb(database.MongoProxy, objectId)
+	if !ok {
+		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
+		return ack
+	}
+	room := RoomM.ChoseByTag(req.Tag)
+	if room == nil {
+		room = RoomM.CreateRoom(player.Name)
+		room.BeginFrameSync() //will create broadcast group on gateway
+	}
+
+	members, details := room.MembersInfo()
+
+	ack.RoomId = string(room.Id)
+	ack.RoomName = room.Name
+	ack.Members = members
+	ack.Details = details
+	ack.Common = getCommonAck(OK)
+
+	return ack
+}
+
+
 func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) interface{} {
 	ack := &LoginRoomAck{}
 	isNewRoom := false
@@ -152,75 +179,9 @@ func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) i
 	sa.Side = config.GetRoomSideNo(req.Side)
 	room.AddOrReplaceActive(sa)
 
+	ack.Side = config.GetRoomSideName(sa.Side)
 	ack.Common = getCommonAck(OK)
 
 	return ack
 }
 
-func Handle_ChoseHeroReq(objectId IdString, opCode MsgType, req *ChoseHeroReq) interface{} {
-	ack := &ChoseHeroAck{}
-	player, ok := AllPlayerM.GetPlayer(objectId)
-	if !ok {
-		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
-		return ack
-	}
-
-	if !config.IsValidHeroName(req.HeroName) {
-		ack.Common = getCommonAck(ERR_HERO_NOT_EXIST)
-		return ack
-	}
-
-	for _, skill := range req.HeroSkills {
-		if !config.IsValidHeroSkill(skill) {
-			ack.Common = getCommonAck(ERR_SKILL_NOT_EXIST)
-			return ack
-		}
-	}
-
-	player.HeroName = req.HeroName
-	player.Skills = make([]string, len(req.HeroSkills))
-	copy(player.Skills, req.HeroSkills)
-
-	room := player.room
-	if room != nil {
-		sa := room.GetExistActive(player.UserId)
-		if sa != nil {
-			sa.Skin = req.HeroSkin
-			sa.Skills = make([]string, len(req.HeroSkills))
-			copy(sa.Skills, req.HeroSkills)
-			sa.SubType = req.HeroName
-			sa.SetDetailChanged()
-			room.AddOrReplaceActive(sa)
-		}
-	}
-
-	ack.Common = getCommonAck(OK)
-
-	return ack
-}
-
-func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq) interface{} {
-	ack := &SearchRoomAck{}
-
-	//FORCE reload player from database, player data maybe changed in other server
-	player, ok := AllPlayerM.LoadOneFromDb(database.MongoProxy, objectId)
-	if !ok {
-		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
-		return ack
-	}
-	room := RoomM.ChoseByTag(req.Tag)
-	if room == nil {
-		room = RoomM.CreateRoom(player.Name)
-		room.BeginFrameSync() //will create broadcast group on gateway
-	}
-
-	members, details := room.MembersInfo()
-
-	ack.RoomId = string(room.Id)
-	ack.RoomName = room.Name
-	ack.Members = members
-	ack.Details = details
-	ack.Common = getCommonAck(OK)
-
-	return ack
-}

@@ -1,9 +1,5 @@
 package config
 
-func IsValidHeroName(hero_name string) bool {
-	return true
-}
-
 func IsValidHeroSkill(skill string) bool {
 	return true
 }

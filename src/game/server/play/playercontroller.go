@@ -1,6 +1,7 @@
 package play
 
 import (
+	"library/config"
 	"library/database"
 	"library/logger"
 	. "types"
@@ -22,15 +23,10 @@ func Handle_LoginReq(objectId IdString, opCode MsgType, req *LoginReq) interface
 		database.DbUpsert(player)
 	}
 
-	hero := player.Hero
-
 	ack.Common = getCommonAck(OK)
-	ack.HeroType = hero.HeroType
-	ack.HeroName = hero.HeroName
-	ack.HeroSkills = hero.Skills
-	ack.HeroSkin = hero.Skin
 	ack.UserName = player.Name
 	ack.UserId = string(player.UserId)
+	ack.Hero = player.HeroInfo()
 
 	return ack
 }
@@ -76,5 +72,60 @@ func Handle_SetPlayerNameReq(objectId IdString, opCode MsgType, req *SetPlayerNa
 	ack.Common = getCommonAck(OK)
 
 	database.DbUpsert(player)
+	return ack
+}
+
+func Handle_ChoseHeroReq(objectId IdString, opCode MsgType, req *ChoseHeroReq) interface{} {
+	ack := &ChoseHeroAck{}
+	player, ok := AllPlayerM.GetPlayer(objectId)
+	if !ok {
+		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
+		return ack
+	}
+
+	for _, skill := range req.HeroSkills {
+		if !config.IsValidHeroSkill(skill) {
+			ack.Common = getCommonAck(ERR_SKILL_NOT_EXIST)
+			return ack
+		}
+	}
+
+	hero, ok := AllHeroes[req.HeroType]
+	if !ok {
+		ack.Common = getCommonAck(ERR_HERO_NOT_EXIST)
+		return ack
+	}
+
+	//default hero name change according to hero type
+	if player.HeroName == player.HeroType {
+		hero.HeroName = hero.HeroType
+	}
+
+	hero.Skills = make([]string, len(req.HeroSkills))
+	copy(hero.Skills, req.HeroSkills)
+
+	// change hero during fight, regulate hp
+	if !req.ResetHp && player.HeroType != hero.HeroType {
+		hero.Hp = hero.FullHp * player.Hp / player.FullHp
+	}
+
+	hero.Skin = req.HeroSkin
+
+	//set player hero after all attributes are set
+	player.Hero = hero
+
+	room := player.room
+	if room != nil {
+		sa := room.GetExistActive(player.UserId)
+		if sa != nil {
+			player.FillActiveDetail(&sa.ActDetail)
+			sa.SetDetailChanged()
+			room.AddOrReplaceActive(sa)
+		}
+	}
+
+	ack.Common = getCommonAck(OK)
+	ack.Hero = player.HeroInfo()
+
 	return ack
 }
