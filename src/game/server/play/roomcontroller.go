@@ -28,9 +28,9 @@ func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq)
 	//fake data for debug
 	ack.Red  = append(ack.Red, NewHero().HeroInfo())
 	ack.Red  = append(ack.Red, NewHero().HeroInfo())
-	ack.Blue = append(ack.Red, NewHero().HeroInfo())
-	ack.Blue = append(ack.Red, NewHero().HeroInfo())
-	ack.Blue = append(ack.Red, NewHero().HeroInfo())
+	ack.Blue = append(ack.Blue, NewHero().HeroInfo())
+	ack.Blue = append(ack.Blue, NewHero().HeroInfo())
+	ack.Blue = append(ack.Blue, NewHero().HeroInfo())
 
 	ack.Common = getCommonAck(OK)
 
