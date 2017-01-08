@@ -2,6 +2,7 @@ package play
 
 import (
 	. "game/com"
+	"library/config"
 	"time"
 	. "types"
 )
@@ -54,4 +55,18 @@ func (r *Room) MembersInfo() ([]*ScreenActive, []*ActiveDetail) {
 	sa := toClientPlayersActives(r.Actives)
 	ad := toClientPlayerDetails(r.Actives)
 	return sa, ad
+}
+
+func (r *Room) SideHeroes() (red, blue []*HeroInfo) {
+	for _, act := range r.Actives {
+		if act.Type == screenObjTypePlayer {
+			switch act.Side {
+			case config.RoomSideBlue:
+				blue = append(blue, act.HeroInfo())
+			case config.RoomSideRed:
+				red = append(red, act.HeroInfo())
+			}
+		}
+	}
+	return
 }

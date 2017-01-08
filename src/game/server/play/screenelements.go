@@ -88,6 +88,22 @@ func (sa *ScrActive) Detail() *types.ActiveDetail {
 	return ad
 }
 
+func (sa *ScrActive) HeroInfo() *types.HeroInfo {
+	if sa.Type == screenObjTypePlayer {
+		hi := &types.HeroInfo{
+			HeroName: sa.Name,
+			HeroType: sa.SubType,
+			Skin:     sa.Skin,
+			Hp:       int32(sa.Hp),
+			FullHp:   int32(sa.FullHp),
+		}
+		hi.Skills = append(hi.Skills, sa.Skills...)
+		return hi
+	}
+
+	return nil
+}
+
 type ScrDecoration struct {
 	AssetId int8
 	X       int16

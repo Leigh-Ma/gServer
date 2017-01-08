@@ -21,12 +21,17 @@ func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq)
 		room.BeginFrameSync() //will create broadcast group on gateway
 	}
 
-	members, details := room.MembersInfo()
-
 	ack.RoomId = string(room.Id)
 	ack.RoomName = room.Name
-	ack.Members = members
-	ack.Details = details
+	ack.Red, ack.Blue = room.SideHeroes()
+
+	//fake data for debug
+	ack.Red  = append(ack.Red, NewHero().HeroInfo())
+	ack.Red  = append(ack.Red, NewHero().HeroInfo())
+	ack.Blue = append(ack.Red, NewHero().HeroInfo())
+	ack.Blue = append(ack.Red, NewHero().HeroInfo())
+	ack.Blue = append(ack.Red, NewHero().HeroInfo())
+
 	ack.Common = getCommonAck(OK)
 
 	return ack
