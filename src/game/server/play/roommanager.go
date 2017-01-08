@@ -42,13 +42,13 @@ func (rm *RoomManager) DestroyRoom(room *Room) {
 	room.Destroy()
 }
 
-func (rm *RoomManager) ChoseByTag(tag string) (room *Room) {
-	room, ok := rm.FindRoom(types.IdString(tag))
+func (rm *RoomManager) ChoseByRoomId(roomId string) (room *Room) {
+	room, ok := rm.FindRoom(types.IdString(roomId))
 	if ok && room.BcgMemberNum() < maxRoomMemberNum {
 		return room
 	}
 
-	_, roomId := com.ChoseARoom()
-	room, _ = rm.FindRoom(roomId)
+	_, id := com.ChoseARoom()
+	room, _ = rm.FindRoom(id)
 	return room
 }

@@ -15,7 +15,7 @@ func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq)
 		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
 		return ack
 	}
-	room := RoomM.ChoseByTag(req.Tag)
+	room := RoomM.ChoseByRoomId(req.RoomId)
 	if room == nil {
 		room = RoomM.CreateRoom(player.Name)
 		room.BeginFrameSync() //will create broadcast group on gateway
@@ -31,7 +31,6 @@ func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq)
 
 	return ack
 }
-
 
 func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) interface{} {
 	ack := &LoginRoomAck{}
@@ -184,4 +183,3 @@ func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) i
 
 	return ack
 }
-

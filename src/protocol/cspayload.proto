@@ -159,7 +159,7 @@ message ChoseHeroAck {
 }
 
 message SearchRoomReq{
-	string tag = 1;
+	string room_id = 1;
 	string server_id = 2;
 }
 

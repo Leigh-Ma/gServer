@@ -18,7 +18,7 @@ func NewHero() (h *Hero) {
 	for _, hero := range AllHeroes {
 		hero.Skin = "default_skin"
 		hero.HeroName = hero.HeroType
-		hero.FullHp = hero.FullHp
+		hero.Hp = hero.FullHp
 		hero.Skills = RandHeroSkillN(2)
 		h = &hero
 		break
