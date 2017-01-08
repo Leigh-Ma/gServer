@@ -6,7 +6,7 @@ import (
 )
 
 type Hero struct {
-	HeroName string
+	UserName string
 	HeroType string
 	Skin     string
 	Skills   []string
@@ -17,7 +17,6 @@ type Hero struct {
 func NewHero() (h *Hero) {
 	for _, hero := range AllHeroes {
 		hero.Skin = "default_skin"
-		hero.HeroName = hero.HeroType
 		hero.Hp = hero.FullHp
 		hero.Skills = RandHeroSkillN(2)
 		h = &hero
@@ -29,7 +28,7 @@ func NewHero() (h *Hero) {
 
 func (h *Hero) HeroInfo() *HeroInfo {
 	hi := &HeroInfo{
-		HeroName: h.HeroName,
+		UserName: h.UserName,
 		HeroType: h.HeroType,
 		FullHp:   h.FullHp,
 		Hp:       h.Hp,

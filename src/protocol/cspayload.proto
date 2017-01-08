@@ -22,18 +22,17 @@ message LoginReq{
 }
 
 message HeroInfo{
-	string HeroName = 1;
-	string HeroType = 2;
-	string Skin     = 3;
-	repeated string Skills = 4;
-	int32 Hp = 5;
-	int32 FullHp = 6;
+	string user_name = 1;
+	string hero_type = 2;
+	string skin     = 3;
+	repeated string skills = 4;
+	int32 hp = 5;
+	int32 full_hp = 6;
 }
 
 message LoginAck{
 	CommonAck common = 1;
 	string user_id = 2;
-	string user_name = 3;
 	HeroInfo hero = 4;
 }
 
@@ -46,49 +45,49 @@ message LogoutAck{
 }
 
 message SetPlayerNameReq {
-	string name = 1;
+	string user_name = 1;
 }
 
 message SetPlayerNameAck {
 	CommonAck common = 1;
-	string name = 2;
+	string user_name = 2;
 }
 
 message ChoseSideReq {
-	string Side = 1;
+	string side = 1;
 }
 
 message ChoseSideAck {
 	CommonAck common = 1;
-	string Side = 2;
+	string side = 2;
 }
 
 message ScreenActive {
-	string Id        = 1;
-	int32  DirectX   = 2;
-	int32  DirectY   = 3;
-	int32  Speed     = 4;
-	int32  PosX      = 5;
-	int32  PosY      = 6;
-	int32  Type      = 7;
-	string Side      = 8;
+	string id        = 1;
+	int32  direct_x  = 2;
+	int32  direct_y  = 3;
+	int32  speed     = 4;
+	int32  pos_x     = 5;
+	int32  pos_y     = 6;
+	int32  type      = 7;
+	string side      = 8;
 }
 
 message ActiveDetail {
-	string Id        = 1;
-	string BelongsTo = 2;
-	string Name      = 3;
+	string id        = 1;
+	string belongs_to= 2;
+	string name      = 3;
 
-	string  SubType  = 4;
-	string  Skin     = 5;
+	string sub_type  = 4;
+	string skin      = 5;
 
-	int32  Hp        = 6;
-	int32  FullHp    = 7;
+	int32  hp        = 6;
+	int32  full_hp    = 7;
 	repeated string skills = 8;
 }
 
 message ScreenDecoration {
-	int32 AssetId  = 1;
+	int32 asset_id = 1;
 	int32 X        = 2;
 	int32 Y        = 3;
 }
@@ -132,14 +131,14 @@ message LeaveRoomAck {
 }
 
 message MoveActionReq {
-	int32  DirectX   = 1;
-	int32  DirectY   = 2;
-	int32  Speed     = 3;
-	int32  PosX      = 4;
-	int32  PosY      = 5;
+	int32  direct_x   = 1;
+	int32  direct_y   = 2;
+	int32  speed      = 3;
+	int32  pos_x      = 4;
+	int32  pos_y      = 5;
 
-	int32  Hp        = 12;
-	int32  FullHp    = 13;
+	int32  hp         = 12;
+	int32  full_hp    = 13;
 }
 
 message MoveActionAck {
@@ -167,6 +166,6 @@ message SearchRoomAck{
 	CommonAck common = 1;
 	string room_id = 2;
 	string room_name = 3;
-	repeated HeroInfo Blue = 4;
-	repeated HeroInfo Red  = 5;
+	repeated HeroInfo blue = 4;
+	repeated HeroInfo red  = 5;
 }

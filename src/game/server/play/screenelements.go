@@ -91,7 +91,7 @@ func (sa *ScrActive) Detail() *types.ActiveDetail {
 func (sa *ScrActive) HeroInfo() *types.HeroInfo {
 	if sa.Type == screenObjTypePlayer {
 		hi := &types.HeroInfo{
-			HeroName: sa.Name,
+			UserName: sa.Name,
 			HeroType: sa.SubType,
 			Skin:     sa.Skin,
 			Hp:       int32(sa.Hp),

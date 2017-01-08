@@ -15,7 +15,6 @@ func Handle_LoginReq(objectId IdString, opCode MsgType, req *LoginReq) interface
 	if !ok {
 		player = &Player{
 			UserId: objectId,
-			Name:   "", //new user
 			UUID:   req.Uuid,
 		}
 		player.Hero = *NewHero()
@@ -24,7 +23,6 @@ func Handle_LoginReq(objectId IdString, opCode MsgType, req *LoginReq) interface
 	}
 
 	ack.Common = getCommonAck(OK)
-	ack.UserName = player.Name
 	ack.UserId = string(player.UserId)
 	ack.Hero = player.HeroInfo()
 
@@ -59,16 +57,16 @@ func Handle_SetPlayerNameReq(objectId IdString, opCode MsgType, req *SetPlayerNa
 		return ack
 	}
 
-	player.Name = req.Name
+	player.UserName = req.UserName
 	if player.room != nil {
 		sa := player.room.GetExistActive(player.UserId)
 		if sa != nil {
-			sa.Name = player.Name
+			sa.Name = player.UserName
 			sa.SetDetailChanged()
 			player.room.AddOrReplaceActive(sa)
 		}
 	}
-	ack.Name = player.Name
+	ack.UserName = player.UserName
 	ack.Common = getCommonAck(OK)
 
 	database.DbUpsert(player)
@@ -96,11 +94,8 @@ func Handle_ChoseHeroReq(objectId IdString, opCode MsgType, req *ChoseHeroReq) i
 		return ack
 	}
 
-	//default hero name change according to hero type
-	if player.HeroName == player.HeroType {
-		hero.HeroName = hero.HeroType
-	}
-
+	//keep user name
+	hero.UserName = player.UserName
 	hero.Skills = make([]string, len(req.HeroSkills))
 	copy(hero.Skills, req.HeroSkills)
 

@@ -10,14 +10,13 @@ import (
 type Player struct {
 	UserId IdString
 	UUID   string
-	Name   string
 	Hero
 	room *Room
 }
 
 func (p *Player) FillActiveDetail(sa *ActDetail) {
-	sa.Name = p.Name
-	sa.SubType = p.HeroName
+	sa.Name = p.UserName
+	sa.SubType = p.HeroType
 	sa.Skin = p.Skin
 
 	sa.Hp = p.Hp

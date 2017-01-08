@@ -17,7 +17,7 @@ func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq)
 	}
 	room := RoomM.ChoseByRoomId(req.RoomId)
 	if room == nil {
-		room = RoomM.CreateRoom(player.Name)
+		room = RoomM.CreateRoom(player.UserName)
 		room.BeginFrameSync() //will create broadcast group on gateway
 	}
 
@@ -26,8 +26,8 @@ func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq)
 	ack.Red, ack.Blue = room.SideHeroes()
 
 	//fake data for debug
-	ack.Red  = append(ack.Red, NewHero().HeroInfo())
-	ack.Red  = append(ack.Red, NewHero().HeroInfo())
+	ack.Red = append(ack.Red, NewHero().HeroInfo())
+	ack.Red = append(ack.Red, NewHero().HeroInfo())
 	ack.Blue = append(ack.Blue, NewHero().HeroInfo())
 	ack.Blue = append(ack.Blue, NewHero().HeroInfo())
 	ack.Blue = append(ack.Blue, NewHero().HeroInfo())
@@ -49,7 +49,7 @@ func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) i
 
 	room, ok := RoomM.FindRoom(IdString(req.RoomId))
 	if !ok {
-		room = RoomM.CreateRoom(player.Name)
+		room = RoomM.CreateRoom(player.UserName)
 		isNewRoom = true
 	}
 
