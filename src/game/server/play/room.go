@@ -57,14 +57,14 @@ func (r *Room) MembersInfo() ([]*ScreenActive, []*ActiveDetail) {
 	return sa, ad
 }
 
-func (r *Room) SideHeroes() (red, blue []*HeroInfo) {
+func (r *Room) SideRoles() (red, blue []*RoleInfo) {
 	for _, act := range r.Actives {
 		if act.Type == screenObjTypePlayer {
 			switch act.Side {
 			case config.RoomSideBlue:
-				blue = append(blue, act.HeroInfo())
+				blue = append(blue, act.RoleInfo())
 			case config.RoomSideRed:
-				red = append(red, act.HeroInfo())
+				red = append(red, act.RoleInfo())
 			}
 		}
 	}

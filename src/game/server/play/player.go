@@ -14,6 +14,20 @@ type Player struct {
 	room *Room
 }
 
+func (p *Player) RoleInfo() *RoleInfo {
+	hi := &RoleInfo{
+		UserId:   string(p.UserId),
+		UserName: p.UserName,
+		HeroType: p.HeroType,
+		FullHp:   p.FullHp,
+		Hp:       p.Hp,
+		Skin:     p.Skin,
+	}
+	hi.Skills = append(hi.Skills, p.Skills...)
+
+	return hi
+}
+
 func (p *Player) FillActiveDetail(sa *ActDetail) {
 	sa.Name = p.UserName
 	sa.SubType = p.HeroType

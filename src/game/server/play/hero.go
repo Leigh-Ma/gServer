@@ -1,6 +1,7 @@
 package play
 
 import (
+	"library/idgen"
 	"math/rand"
 	. "types"
 )
@@ -26,8 +27,9 @@ func NewHero() (h *Hero) {
 	return
 }
 
-func (h *Hero) HeroInfo() *HeroInfo {
-	hi := &HeroInfo{
+func (h *Hero) debugRoleInfo() *RoleInfo {
+	hi := &RoleInfo{
+		UserId:   string(idgen.NewObjectID().ToIdString()),
 		UserName: h.UserName,
 		HeroType: h.HeroType,
 		FullHp:   h.FullHp,

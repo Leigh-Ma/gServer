@@ -21,19 +21,19 @@ message LoginReq{
 	string server_id = 3;
 }
 
-message HeroInfo{
-	string user_name = 1;
-	string hero_type = 2;
-	string skin     = 3;
-	repeated string skills = 4;
-	int32 hp = 5;
-	int32 full_hp = 6;
+message RoleInfo{
+	string user_id   = 1;
+	string user_name = 2;
+	string hero_type = 3;
+	string skin     = 4;
+	repeated string skills = 5;
+	int32 hp = 6;
+	int32 full_hp = 7;
 }
 
 message LoginAck{
 	CommonAck common = 1;
-	string user_id = 2;
-	HeroInfo hero = 4;
+	RoleInfo hero = 4;
 }
 
 message LogoutReq{
@@ -154,7 +154,7 @@ message ChoseHeroReq {
 
 message ChoseHeroAck {
 	CommonAck common = 1;
-	HeroInfo hero = 2;
+	RoleInfo hero = 2;
 }
 
 message SearchRoomReq{
@@ -166,6 +166,6 @@ message SearchRoomAck{
 	CommonAck common = 1;
 	string room_id = 2;
 	string room_name = 3;
-	repeated HeroInfo blue = 4;
-	repeated HeroInfo red  = 5;
+	repeated RoleInfo blue = 4;
+	repeated RoleInfo red  = 5;
 }

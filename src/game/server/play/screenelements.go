@@ -88,9 +88,10 @@ func (sa *ScrActive) Detail() *types.ActiveDetail {
 	return ad
 }
 
-func (sa *ScrActive) HeroInfo() *types.HeroInfo {
+func (sa *ScrActive) RoleInfo() *types.RoleInfo {
 	if sa.Type == screenObjTypePlayer {
-		hi := &types.HeroInfo{
+		hi := &types.RoleInfo{
+			UserId:   string(sa.Id),
 			UserName: sa.Name,
 			HeroType: sa.SubType,
 			Skin:     sa.Skin,

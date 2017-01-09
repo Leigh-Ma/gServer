@@ -23,8 +23,7 @@ func Handle_LoginReq(objectId IdString, opCode MsgType, req *LoginReq) interface
 	}
 
 	ack.Common = getCommonAck(OK)
-	ack.UserId = string(player.UserId)
-	ack.Hero = player.HeroInfo()
+	ack.Hero = player.RoleInfo()
 
 	return ack
 }
@@ -120,7 +119,7 @@ func Handle_ChoseHeroReq(objectId IdString, opCode MsgType, req *ChoseHeroReq) i
 	}
 
 	ack.Common = getCommonAck(OK)
-	ack.Hero = player.HeroInfo()
+	ack.Hero = player.RoleInfo()
 
 	return ack
 }

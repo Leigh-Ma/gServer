@@ -23,14 +23,14 @@ func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq)
 
 	ack.RoomId = string(room.Id)
 	ack.RoomName = room.Name
-	ack.Red, ack.Blue = room.SideHeroes()
+	ack.Red, ack.Blue = room.SideRoles()
 
 	//fake data for debug
-	ack.Red = append(ack.Red, NewHero().HeroInfo())
-	ack.Red = append(ack.Red, NewHero().HeroInfo())
-	ack.Blue = append(ack.Blue, NewHero().HeroInfo())
-	ack.Blue = append(ack.Blue, NewHero().HeroInfo())
-	ack.Blue = append(ack.Blue, NewHero().HeroInfo())
+	ack.Red = append(ack.Red, NewHero().debugRoleInfo())
+	ack.Red = append(ack.Red, NewHero().debugRoleInfo())
+	ack.Blue = append(ack.Blue, NewHero().debugRoleInfo())
+	ack.Blue = append(ack.Blue, NewHero().debugRoleInfo())
+	ack.Blue = append(ack.Blue, NewHero().debugRoleInfo())
 
 	ack.Common = getCommonAck(OK)
 
