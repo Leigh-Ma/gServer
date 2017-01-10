@@ -62,7 +62,7 @@ message ChoseSideAck {
 	string side = 2;
 }
 
-message ScreenActive {
+message ActiveMove {
 	string id        = 1;
 	int32  direct_x  = 2;
 	int32  direct_y  = 3;
@@ -92,22 +92,40 @@ message ScreenDecoration {
 	int32 Y        = 3;
 }
 
+message ArrowInfo{
+}
+
+message ScreenArrowInfo {
+	ArrowInfo arrow = 1;
+	ActiveMove arrow_move = 2;
+}
+
+message ScreenRoleInfo{
+	RoleInfo hero = 1;
+	ActiveMove hero_move = 2;
+}
+
 message ScreenInfo{
 	int64    frame_id = 1;
 	int32    width    = 2;
 	int32    height   = 3;
-	repeated ScreenActive actives = 4;
-	repeated ScreenDecoration decorations = 5;
-	repeated ActiveDetail details = 6;
+	repeated ScreenRoleInfo roles = 4;
+	repeated ScreenArrowInfo arrows = 5;
+	repeated ScreenDecoration decorations = 6;
 }
 
 message ScreenChangeNotify{
 	int64    frame_id = 1;
-	repeated ActiveDetail active_details = 2;
-	repeated ScreenActive add_actives = 3;
-	repeated ScreenDecoration add_decorations = 4;
-	repeated string del_active_ids = 5;
-	repeated ScreenDecoration del_decorations = 6;
+	repeated RoleInfo heroes = 2; // 新玩家或者玩家信息的变更
+	repeated ActiveMove heroes_move = 3; //玩家位置和移动信息（可能是新玩家）
+	repeated ScreenArrowInfo arrows = 4; //新加子弹（打比方）的移动和详情信息
+	//....其他类似bullet信息
+	repeated string del_hero_ids  = 5;  //消失的玩家id
+	repeated string del_arrows_ids = 6; //消失的子弹id
+	//....其他类arrow消失的id
+	//装饰物变更
+	repeated ScreenDecoration add_decorations = 7;
+	repeated ScreenDecoration del_decorations = 8;
 }
 
 message LoginRoomReq {

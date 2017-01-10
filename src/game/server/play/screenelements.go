@@ -8,7 +8,7 @@ import (
 
 const (
 	screenObjTypePlayer = 1
-	screenObjTypeBullet = 2
+	screenObjTypeArrow  = 2
 )
 
 const (
@@ -57,8 +57,8 @@ type ScrActive struct {
 	ActDetail
 }
 
-func (sa *ScrActive) ToClient() *types.ScreenActive {
-	return &types.ScreenActive{
+func (sa *ScrActive) ToMove() *types.ActiveMove {
+	return &types.ActiveMove{
 		Id:      string(sa.Id),
 		Type:    int32(sa.Type),
 		DirectX: int32(sa.DirectX),
@@ -100,6 +100,14 @@ func (sa *ScrActive) RoleInfo() *types.RoleInfo {
 		}
 		hi.Skills = append(hi.Skills, sa.Skills...)
 		return hi
+	}
+
+	return nil
+}
+
+func (sa *ScrActive) ArrowInfo() *types.ArrowInfo {
+	if sa.Type == screenObjTypeArrow {
+		return &types.ArrowInfo{}
 	}
 
 	return nil
@@ -152,46 +160,89 @@ func (se *screenElements) addDecoration(decoration *ScrDecoration) {
 	se.Decorations = append(se.Decorations, decoration)
 }
 
-func toClientActives(actives map[types.IdString]*ScrActive) []*types.ScreenActive {
+func toClientRoleInfo(actives map[types.IdString]*ScrActive) (ris []*types.RoleInfo) {
 	if len(actives) == 0 {
 		return nil
 	}
-	sas := make([]*types.ScreenActive, len(actives))
-	idx := 0
+
 	for _, act := range actives {
-		sas[idx] = act.ToClient()
-		idx += 1
+		ri := act.RoleInfo()
+		if ri != nil {
+			ris = append(ris, ri)
+		}
 	}
-	return sas
+	return ris
 }
 
-func toClientPlayersActives(actives map[types.IdString]*ScrActive) []*types.ScreenActive {
+func toChangedClientRoleInfo(actives map[types.IdString]*ScrActive) (ris []*types.RoleInfo) {
 	if len(actives) == 0 {
 		return nil
 	}
-	sas := make([]*types.ScreenActive, 0)
+
+	for _, act := range actives {
+		ri := act.RoleInfo()
+		if ri != nil && act.IsDetailChanged() {
+			ris = append(ris, ri)
+		}
+	}
+	return ris
+}
+
+func toClientRoleMove(actives map[types.IdString]*ScrActive) (ams []*types.ActiveMove) {
+	if len(actives) == 0 {
+		return nil
+	}
+
 	for _, act := range actives {
 		if act.Type == screenObjTypePlayer {
-			sas = append(sas, act.ToClient())
+			ams = append(ams, act.ToMove())
+		}
+	}
+	return ams
+}
+
+func toClientScreenRoleInfo(actives map[types.IdString]*ScrActive) (sis []*types.ScreenRoleInfo) {
+	if len(actives) == 0 {
+		return nil
+	}
+
+	for _, act := range actives {
+		hero := act.RoleInfo()
+		if hero != nil {
+			sis = append(sis, &types.ScreenRoleInfo{Hero: hero, HeroMove: act.ToMove()})
+		}
+	}
+	return sis
+}
+
+func toClientScreenArrowInfo(actives map[types.IdString]*ScrActive) (sas []*types.ScreenArrowInfo) {
+	if len(actives) == 0 {
+		return nil
+	}
+
+	for _, act := range actives {
+		arrow := act.ArrowInfo()
+		if arrow != nil {
+			sas = append(sas, &types.ScreenArrowInfo{Arrow: arrow, ArrowMove: act.ToMove()})
 		}
 	}
 	return sas
 }
 
-func toClientActivesIds(actives map[types.IdString]*ScrActive) []string {
+func toClientActivesIds(actives map[types.IdString]*ScrActive, tp int8) (ids []string) {
 	if len(actives) == 0 {
 		return nil
 	}
-	sas := make([]string, len(actives))
-	idx := 0
-	for id := range actives {
-		sas[idx] = string(id)
-		idx += 1
+
+	for _, act := range actives {
+		if act.Type == tp {
+			ids = append(ids, string(act.Id))
+		}
 	}
-	return sas
+	return ids
 }
 
-func toClientDecorations(decorations []*ScrDecoration) []*types.ScreenDecoration {
+func toClientScreenDecorations(decorations []*ScrDecoration) []*types.ScreenDecoration {
 	if len(decorations) == 0 {
 		return nil
 	}
@@ -200,49 +251,4 @@ func toClientDecorations(decorations []*ScrDecoration) []*types.ScreenDecoration
 		sds[idx] = decoration.ToClient()
 	}
 	return sds
-}
-
-func toClientActivesDetails(actives map[types.IdString]*ScrActive) []*types.ActiveDetail {
-	if len(actives) == 0 {
-		return nil
-	}
-	ads := make([]*types.ActiveDetail, len(actives))
-	idx := 0
-	for _, act := range actives {
-		ads[idx] = act.Detail()
-		idx += 1
-	}
-
-	return ads
-}
-
-func toClientPlayerDetails(actives map[types.IdString]*ScrActive) []*types.ActiveDetail {
-	if len(actives) == 0 {
-		return nil
-	}
-	ads := make([]*types.ActiveDetail, 0)
-	for _, act := range actives {
-		if act.Type == screenObjTypePlayer {
-			ads = append(ads, act.Detail())
-		}
-	}
-
-	return ads
-}
-
-func toChangedActivesDetails(actives map[types.IdString]*ScrActive) []*types.ActiveDetail {
-	if len(actives) == 0 {
-		return nil
-	}
-	ads := make([]*types.ActiveDetail, len(actives))
-	idx := 0
-	for _, act := range actives {
-		if act.IsDetailChanged() {
-			ads[idx] = act.Detail()
-			idx += 1
-			act.ClearDetailChanged()
-		}
-	}
-
-	return ads
 }

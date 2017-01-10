@@ -56,9 +56,9 @@ func (scr *Screen) AddDecoration(decoration *ScrDecoration) {
 func (scr *Screen) ToClient() *ScreenInfo {
 	si := &ScreenInfo{FrameId: scr.FrameId, Width: int32(scr.Width), Height: int32(scr.Height)}
 	scr.Lock()
-	si.Decorations = toClientDecorations(scr.Decorations)
-	si.Actives = toClientActives(scr.Actives)
-	si.Details = toClientActivesDetails(scr.Actives)
+	si.Roles = toClientScreenRoleInfo(scr.Actives)
+	si.Decorations = toClientScreenDecorations(scr.Decorations)
+	si.Arrows = toClientScreenArrowInfo(scr.Actives)
 	scr.Unlock()
 
 	return si
@@ -78,11 +78,13 @@ func (scr *Screen) ScreenChangeNotify() *ScreenChangeNotify {
 	scr.Unlock()
 
 	si := &ScreenChangeNotify{FrameId: scr.FrameId}
-	si.AddActives = toClientActives(add.Actives)
-	si.ActiveDetails = toChangedActivesDetails(add.Actives)
-	si.DelActiveIds = toClientActivesIds(del.Actives)
-	si.AddDecorations = toClientDecorations(add.Decorations)
-	si.DelDecorations = toClientDecorations(del.Decorations)
+	si.Heroes = toChangedClientRoleInfo(add.Actives)
+	si.HeroesMove = toClientRoleMove(add.Actives)
+	si.Arrows = toClientScreenArrowInfo(add.Actives)
+	si.DelArrowsIds = toClientActivesIds(del.Actives, screenObjTypeArrow)
+	si.DelHeroIds = toClientActivesIds(del.Actives, screenObjTypePlayer)
+	si.AddDecorations = toClientScreenDecorations(add.Decorations)
+	si.DelDecorations = toClientScreenDecorations(del.Decorations)
 
 	return si
 }
