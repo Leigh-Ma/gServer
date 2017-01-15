@@ -48,11 +48,7 @@ func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) i
 		return ack
 	}
 
-	room, ok := RoomM.FindRoom(IdString(req.RoomId))
-	if !ok {
-		room = RoomM.CreateRoom(player.UserName)
-		isNewRoom = true
-	}
+	room := RoomM.ChoseByRoomId(req.RoomId)
 
 	sa := room.GetExistActive(player.UserId)
 	if sa == nil {
@@ -69,7 +65,7 @@ func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) i
 	player.FillActiveDetail(&sa.ActDetail)
 	sa.SetDetailChanged()
 
-	room.AddOrReplaceActive(sa)
+	room.NoNotifyAddActive(sa)
 	room.AddBcgMember(player.UserId)
 
 	player.room = room
@@ -83,6 +79,9 @@ func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) i
 		}
 		AsyncSender.SendServerNotify(MT_BrdCastAddMemberReq, bcgSync)
 	}
+
+	notify := &ChoseSideNotify{Side: req.Side, Room: room.RoomInfo(), Role: sa.RoleInfo()}
+	AsyncSender.InstantSendBroadCastNotify(MT_ChoseSideNotify, room.Id, notify)
 
 	ack.Screen = room.ScreenInfo()
 	ack.Room = room.RoomInfo()

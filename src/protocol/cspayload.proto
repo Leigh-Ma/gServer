@@ -197,3 +197,9 @@ message StartFightNotify{
 	ScreenInfo screen = 1;
 	RoomInfo   room = 2;
 }
+
+message ChoseSideNotify {
+	string  side = 1;
+	RoomInfo room = 2;
+	RoleInfo role = 3;
+}

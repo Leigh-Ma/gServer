@@ -148,3 +148,10 @@ func On_StartFightNotify(objectId IdString, opCode MsgType, payLoad []byte) inte
 	logger.Payload("rx-r: %4d: payload %s", opCode, structenh.StringifyStruct(req))
 	return Handle_StartFightNotify(objectId, opCode, req)
 }
+
+func On_ChoseSideNotify(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &ChoseSideNotify{}
+	pb.Unmarshal(payLoad, req)
+	logger.Payload("rx-r: %4d: payload %s", opCode, structenh.StringifyStruct(req))
+	return Handle_ChoseSideNotify(objectId, opCode, req)
+}

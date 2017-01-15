@@ -55,6 +55,7 @@ func (r *Room) BeginFrameSync() {
 		AsyncSender.InstantSendServerNotify(MT_BrdCastSyncReq, r.BcgGroupDetail())
 		ticker := time.Tick(time.Microsecond * (1000 / screenSyncFrameRatio))
 		for {
+			PlayFrame.SetFrameTime()
 			select {
 			case <-r.stop:
 				break
@@ -63,7 +64,7 @@ func (r *Room) BeginFrameSync() {
 					AsyncSender.InstantSendBroadCastNotify(MT_ScreenChangeNotify, r.BrdCastGroup.Id, notify)
 				}
 
-				if PlayFrame.FrameTime()-oneFightDuration > r.FightStartAt {
+				if r.FightStartAt > 0 && PlayFrame.FrameTime()-oneFightDuration > r.FightStartAt {
 					r.FightEnd()
 					r.Destroy()
 				}
@@ -77,7 +78,7 @@ func (r *Room) FightBegin() {
 	r.FightStartAt = PlayFrame.FrameTime()
 
 	notify := &StartFightNotify{
-		Room: r.RoomInfo(),
+		Room:   r.RoomInfo(),
 		Screen: r.ScreenInfo(),
 	}
 

@@ -45,3 +45,7 @@ func Handle_ScreenChangeNotify(objectId IdString, opCode MsgType, req *ScreenCha
 func Handle_StartFightNotify(objectId IdString, opCode MsgType, req *StartFightNotify) interface{} {
 	return nil
 }
+
+func Handle_ChoseSideNotify(objectId IdString, opCode MsgType, req *ChoseSideNotify) interface{} {
+	return nil
+}

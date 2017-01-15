@@ -23,6 +23,7 @@ const (
     MT_SearchRoomAck     =  MsgType( 18)
     MT_ScreenChangeNotify =  MsgType(101)
     MT_StartFightNotify  =  MsgType(102)
+    MT_ChoseSideNotify   =  MsgType(103)
 )
 
 var csmsgtypesNames = map[MsgType]string {
@@ -47,4 +48,5 @@ var csmsgtypesNames = map[MsgType]string {
     MT_SearchRoomAck    :  "MT_SearchRoomAck",
     MT_ScreenChangeNotify:  "MT_ScreenChangeNotify",
     MT_StartFightNotify :  "MT_StartFightNotify",
+    MT_ChoseSideNotify  :  "MT_ChoseSideNotify",
 }

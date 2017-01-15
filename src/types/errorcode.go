@@ -17,7 +17,7 @@ var ErrDesc = map[int32]string{
     ERR_GROUP_NOT_FOUND: "boradcast group not found",
     ERR_ROOM_NOT_FOUND: "room not found",
     ERR_PLAYER_NOT_FOUND: "player not found",
-    ERR_SHOULD_LOGIN_ROOM: "should login root first",
+    ERR_SHOULD_LOGIN_ROOM: "should login room first",
     ERR_HERO_NOT_EXIST: "hero not exist in config",
     ERR_SKILL_NOT_EXIST: "skill not exist in config",
 }

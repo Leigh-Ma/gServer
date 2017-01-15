@@ -38,6 +38,10 @@ func (scr *Screen) GetExistActive(actId IdString) *ScrActive {
 	return act
 }
 
+func (scr *Screen) NoNotifyAddActive(act *ScrActive) {
+	scr.addOrReplaceActive(act)
+}
+
 func (scr *Screen) AddOrReplaceActive(act *ScrActive) {
 	scr.addOrReplaceActive(act)
 	scr.add.addOrReplaceActive(act)
@@ -68,7 +72,7 @@ func (scr *Screen) ScreenChangeNotify() *ScreenChangeNotify {
 	scr.Lock()
 	add := scr.add
 	del := scr.del
-	if add.Blank() || del.Blank() {
+	if add.Blank() && del.Blank() {
 		scr.Unlock()
 		return nil
 	}

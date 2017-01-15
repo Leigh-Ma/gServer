@@ -68,3 +68,7 @@ new {
 new {
     code:   102, action: StartFightNotify, reaction: StartFightNotify,
 }
+
+new {
+    code:   103, action: ChoseSideNotify, reaction: ChoseSideNotify,
+}

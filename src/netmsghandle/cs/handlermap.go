@@ -32,4 +32,5 @@ var NetMsgTypeHandler = map[MsgType]*NetMsgCb {
 	MT_SearchRoomAck :&NetMsgCb{MT_SearchRoomAck, MT_Blank        , On_SearchRoomAck, ""},
 	MT_ScreenChangeNotify :&NetMsgCb{MT_ScreenChangeNotify, MT_ScreenChangeNotify, On_ScreenChangeNotify, ""},
 	MT_StartFightNotify :&NetMsgCb{MT_StartFightNotify, MT_StartFightNotify, On_StartFightNotify, ""},
+	MT_ChoseSideNotify :&NetMsgCb{MT_ChoseSideNotify, MT_ChoseSideNotify, On_ChoseSideNotify, ""},
 }
