@@ -3,6 +3,7 @@ package play
 import (
 	"library/config"
 	"library/database"
+	"math/rand"
 	. "types"
 )
 
@@ -37,8 +38,8 @@ func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq)
 	return ack
 }
 
-func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) interface{} {
-	ack := &LoginRoomAck{}
+func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) interface{} {
+	ack := &ChoseSideAck{}
 	isNewRoom := false
 	//FORCE reload player from database, player data maybe changed in other server
 	player, ok := AllPlayerM.LoadOneFromDb(database.MongoProxy, objectId)
@@ -62,8 +63,8 @@ func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) i
 		}
 	}
 
-	sa.PosX = int16(req.PosX)
-	sa.PosY = int16(req.PosY)
+	sa.PosX = int16(rand.Int31n(scrWidth))
+	sa.PosY = int16(rand.Int31n(scrHeight))
 
 	player.FillActiveDetail(&sa.ActDetail)
 	sa.SetDetailChanged()
@@ -83,7 +84,8 @@ func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) i
 		AsyncSender.SendServerNotify(MT_BrdCastAddMemberReq, bcgSync)
 	}
 
-	ack.Screen = room.Screen.ToClient()
+	ack.Screen = room.ScreenInfo()
+	ack.Room = room.RoomInfo()
 	ack.Common = getCommonAck(OK)
 
 	database.DbUpsert(player)
@@ -160,17 +162,18 @@ func Handle_MoveActionReq(objectId IdString, opCode MsgType, req *MoveActionReq)
 	return nil
 }
 
-func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) interface{} {
-	ack := &ChoseSideAck{}
+func Handle_StartFightReq(objectId IdString, opCode MsgType, req *StartFightReq) interface{} {
+	ack := &StartFightAck{}
+
 	player, ok := AllPlayerM.GetPlayer(objectId)
 	if !ok {
 		ack.Common = getCommonAck(ERR_PLAYER_NOT_FOUND)
 		return ack
 	}
 
-	room := player.room
-	if room == nil {
-		ack.Common = getCommonAck(ERR_SHOULD_LOGIN_ROOM)
+	room, ok := RoomM.FindRoom(IdString(req.RoomId))
+	if !ok {
+		ack.Common = getCommonAck(ERR_ROOM_NOT_FOUND)
 		return ack
 	}
 
@@ -180,11 +183,8 @@ func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) i
 		return ack
 	}
 
-	sa.Side = config.GetRoomSideNo(req.Side)
-	room.AddOrReplaceActive(sa)
+	room.FightBegin()
 
-	ack.Side = config.GetRoomSideName(sa.Side)
 	ack.Common = getCommonAck(OK)
-
 	return ack
 }

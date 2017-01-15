@@ -14,11 +14,11 @@ func Handle_SetPlayerNameAck(objectId IdString, opCode MsgType, ack *SetPlayerNa
 	return nil
 }
 
-func Handle_LoginRoomAck(objectId IdString, opCode MsgType, ack *LoginRoomAck) interface{} {
+func Handle_ChoseSideAck(objectId IdString, opCode MsgType, ack *ChoseSideAck) interface{} {
 	return nil
 }
 
-func Handle_ChoseSideAck(objectId IdString, opCode MsgType, ack *ChoseSideAck) interface{} {
+func Handle_StartFightAck(objectId IdString, opCode MsgType, ack *StartFightAck) interface{} {
 	return nil
 }
 

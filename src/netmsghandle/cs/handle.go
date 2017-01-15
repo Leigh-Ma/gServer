@@ -51,20 +51,6 @@ func On_SetPlayerNameAck(objectId IdString, opCode MsgType, payLoad []byte) inte
 	return Handle_SetPlayerNameAck(objectId, opCode, req)
 }
 
-func On_LoginRoomReq(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
-	req := &LoginRoomReq{}
-	pb.Unmarshal(payLoad, req)
-	logger.Payload("rx-r: %4d: payload %s", opCode, structenh.StringifyStruct(req))
-	return Handle_LoginRoomReq(objectId, opCode, req)
-}
-
-func On_LoginRoomAck(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
-	req := &LoginRoomAck{}
-	pb.Unmarshal(payLoad, req)
-	logger.Payload("rx-r: %4d: payload %s", opCode, structenh.StringifyStruct(req))
-	return Handle_LoginRoomAck(objectId, opCode, req)
-}
-
 func On_ChoseSideReq(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
 	req := &ChoseSideReq{}
 	pb.Unmarshal(payLoad, req)
@@ -79,11 +65,18 @@ func On_ChoseSideAck(objectId IdString, opCode MsgType, payLoad []byte) interfac
 	return Handle_ChoseSideAck(objectId, opCode, req)
 }
 
-func On_ScreenChangeNotify(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
-	req := &ScreenChangeNotify{}
+func On_StartFightReq(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &StartFightReq{}
 	pb.Unmarshal(payLoad, req)
 	logger.Payload("rx-r: %4d: payload %s", opCode, structenh.StringifyStruct(req))
-	return Handle_ScreenChangeNotify(objectId, opCode, req)
+	return Handle_StartFightReq(objectId, opCode, req)
+}
+
+func On_StartFightAck(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &StartFightAck{}
+	pb.Unmarshal(payLoad, req)
+	logger.Payload("rx-r: %4d: payload %s", opCode, structenh.StringifyStruct(req))
+	return Handle_StartFightAck(objectId, opCode, req)
 }
 
 func On_LeaveRoomReq(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
@@ -140,4 +133,18 @@ func On_SearchRoomAck(objectId IdString, opCode MsgType, payLoad []byte) interfa
 	pb.Unmarshal(payLoad, req)
 	logger.Payload("rx-r: %4d: payload %s", opCode, structenh.StringifyStruct(req))
 	return Handle_SearchRoomAck(objectId, opCode, req)
+}
+
+func On_ScreenChangeNotify(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &ScreenChangeNotify{}
+	pb.Unmarshal(payLoad, req)
+	logger.Payload("rx-r: %4d: payload %s", opCode, structenh.StringifyStruct(req))
+	return Handle_ScreenChangeNotify(objectId, opCode, req)
+}
+
+func On_StartFightNotify(objectId IdString, opCode MsgType, payLoad []byte) interface{} {
+	req := &StartFightNotify{}
+	pb.Unmarshal(payLoad, req)
+	logger.Payload("rx-r: %4d: payload %s", opCode, structenh.StringifyStruct(req))
+	return Handle_StartFightNotify(objectId, opCode, req)
 }

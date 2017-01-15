@@ -53,7 +53,7 @@ func (scr *Screen) AddDecoration(decoration *ScrDecoration) {
 	scr.add.addDecoration(decoration)
 }
 
-func (scr *Screen) ToClient() *ScreenInfo {
+func (scr *Screen) ScreenInfo() *ScreenInfo {
 	si := &ScreenInfo{FrameId: scr.FrameId, Width: int32(scr.Width), Height: int32(scr.Height)}
 	scr.Lock()
 	si.Roles = toClientScreenRoleInfo(scr.Actives)

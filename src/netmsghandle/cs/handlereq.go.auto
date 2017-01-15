@@ -14,15 +14,11 @@ func Handle_SetPlayerNameReq(objectId IdString, opCode MsgType, req *SetPlayerNa
 	return nil
 }
 
-func Handle_LoginRoomReq(objectId IdString, opCode MsgType, req *LoginRoomReq) interface{} {
-	return nil
-}
-
 func Handle_ChoseSideReq(objectId IdString, opCode MsgType, req *ChoseSideReq) interface{} {
 	return nil
 }
 
-func Handle_ScreenChangeNotify(objectId IdString, opCode MsgType, req *ScreenChangeNotify) interface{} {
+func Handle_StartFightReq(objectId IdString, opCode MsgType, req *StartFightReq) interface{} {
 	return nil
 }
 
@@ -39,5 +35,13 @@ func Handle_ChoseHeroReq(objectId IdString, opCode MsgType, req *ChoseHeroReq) i
 }
 
 func Handle_SearchRoomReq(objectId IdString, opCode MsgType, req *SearchRoomReq) interface{} {
+	return nil
+}
+
+func Handle_ScreenChangeNotify(objectId IdString, opCode MsgType, req *ScreenChangeNotify) interface{} {
+	return nil
+}
+
+func Handle_StartFightNotify(objectId IdString, opCode MsgType, req *StartFightNotify) interface{} {
 	return nil
 }

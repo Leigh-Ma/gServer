@@ -30,20 +30,16 @@ new {
     code:   6, action: SetPlayerNameAck,
 }
 
-
 new {
-    code:   7, action: LoginRoomReq, payload: LoginRoomReq, reaction: LoginRoomAck,
-    code:   8, action: LoginRoomAck,
+    code:   7, action: ChoseSideReq, reaction: ChoseSideAck,
+    code:   8, action: ChoseSideAck,
 }
 
 new {
-    code:   9, action: ChoseSideReq, reaction: ChoseSideAck,
-    code:   10, action: ChoseSideAck,
+    code:   9,  action: StartFightReq, reaction: StartFightAck,
+    code:   10, action: StartFightAck,
 }
 
-new {
-    code:   101, action: ScreenChangeNotify, reaction: ScreenChangeNotify,
-}
 
 new {
     code:   11, action: LeaveRoomReq, reaction: LeaveRoomAck,
@@ -63,4 +59,12 @@ new {
 new {
     code:   17, action: SearchRoomReq, reaction: SearchRoomAck,
     code:   18, action: SearchRoomAck,
+}
+
+new {
+    code:   101, action: ScreenChangeNotify, reaction: ScreenChangeNotify,
+}
+
+new {
+    code:   102, action: StartFightNotify, reaction: StartFightNotify,
 }

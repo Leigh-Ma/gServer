@@ -1,6 +1,5 @@
 package play
 
-//Auto generated, do not modify unless you know clearly what you are doing.
 import . "types"
 
 func Handle_LoginAck(objectId IdString, opCode MsgType, ack *LoginAck) interface{} {
@@ -8,14 +7,6 @@ func Handle_LoginAck(objectId IdString, opCode MsgType, ack *LoginAck) interface
 }
 
 func Handle_LogoutAck(objectId IdString, opCode MsgType, ack *LogoutAck) interface{} {
-	return nil
-}
-
-func Handle_LoginRoomAck(objectId IdString, opCode MsgType, ack *LoginRoomAck) interface{} {
-	return nil
-}
-
-func Handle_ScreenChangeNotify(objectId IdString, opCode MsgType, ack *ScreenChangeNotify) interface{} {
 	return nil
 }
 
@@ -40,5 +31,17 @@ func Handle_ChoseHeroAck(objectId IdString, opCode MsgType, ack *ChoseHeroAck) i
 }
 
 func Handle_SearchRoomAck(objectId IdString, opCode MsgType, ack *SearchRoomAck) interface{} {
+	return nil
+}
+
+func Handle_StartFightAck(objectId IdString, opCode MsgType, ack *StartFightAck) interface{} {
+	return nil
+}
+
+func Handle_ScreenChangeNotify(objectId IdString, opCode MsgType, ack *ScreenChangeNotify) interface{} {
+	return nil
+}
+
+func Handle_StartFightNotify(objectId IdString, opCode MsgType, req *StartFightNotify) interface{} {
 	return nil
 }

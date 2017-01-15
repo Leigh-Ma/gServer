@@ -10,6 +10,10 @@ import (
 const (
 	screenSyncFrameRatio = 20
 	maxRoomMemberNum     = 8
+	oneFightDuration     = 900
+	roomStatusWait       = "wait"
+	roomStatusFighting   = "fight"
+	roomStatusStopped    = "stop"
 )
 
 //room_id -> brdcastgroup.id
@@ -17,16 +21,32 @@ type Room struct {
 	*BrdCastGroup
 	*Screen
 
-	Name string
-	stop chan int
+	Status        string
+	FightStartAt  UnixTS
+	FightDuration UnixTS
+	Name          string
+	stop          chan int
 }
 
 func NewRoom(id IdString, name string) *Room {
 	r := &Room{Name: name}
 	r.BrdCastGroup = NewBrdCastGroup4Server(getMyServerId(), id)
 	r.Screen = NewScreen()
+	r.Status = roomStatusWait
+	r.FightDuration = UnixTS(oneFightDuration)
+
+	r.stop = make(chan int)
 
 	return r
+}
+
+func (r *Room) RoomInfo() *RoomInfo {
+	return &RoomInfo{
+		RoomId:        string(r.Id),
+		Status:        r.Status,
+		FightDuration: int32(r.FightDuration),
+		FightStartAt:  int32(r.FightStartAt),
+	}
 }
 
 func (r *Room) BeginFrameSync() {
@@ -42,9 +62,23 @@ func (r *Room) BeginFrameSync() {
 				if notify := r.ScreenChangeNotify(); notify != nil {
 					AsyncSender.InstantSendBroadCastNotify(MT_ScreenChangeNotify, r.BrdCastGroup.Id, notify)
 				}
+
+				if PlayFrame.FrameTime()-oneFightDuration > r.FightStartAt {
+					r.FightEnd()
+					r.Destroy()
+				}
 			}
 		}
 	}()
+}
+
+func (r *Room) FightBegin() {
+	r.Status = roomStatusFighting
+	r.FightStartAt = PlayFrame.FrameTime()
+}
+
+func (r *Room) FightEnd() {
+	r.Status = roomStatusStopped
 }
 
 func (r *Room) Destroy() {
