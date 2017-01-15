@@ -75,6 +75,13 @@ func (r *Room) BeginFrameSync() {
 func (r *Room) FightBegin() {
 	r.Status = roomStatusFighting
 	r.FightStartAt = PlayFrame.FrameTime()
+
+	notify := &StartFightNotify{
+		Room: r.RoomInfo(),
+		Screen: r.ScreenInfo(),
+	}
+
+	AsyncSender.InstantSendBroadCastNotify(MT_StartFightNotify, r.BrdCastGroup.Id, notify)
 }
 
 func (r *Room) FightEnd() {

@@ -194,6 +194,6 @@ message SearchRoomAck{
 }
 
 message StartFightNotify{
-	CommonAck common  = 1;
-	ScreenInfo screen = 2;
+	ScreenInfo screen = 1;
+	RoomInfo   room = 2;
 }
